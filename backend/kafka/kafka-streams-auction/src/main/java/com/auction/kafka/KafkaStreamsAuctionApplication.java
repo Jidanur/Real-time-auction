@@ -4,9 +4,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import com.auction.kafka.config.RepositoryConfig;
 
-@SpringBootApplication(exclude = {JpaRepositoriesAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-//@EnableKafkaStreams
+@SpringBootApplication(exclude = { HibernateJpaAutoConfiguration.class })
+
+@EnableJpaRepositories
+
+
 public class KafkaStreamsAuctionApplication {
 
 	public static void main(String[] args) {
