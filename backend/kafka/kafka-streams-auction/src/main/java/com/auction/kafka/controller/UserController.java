@@ -32,7 +32,7 @@ public class UserController {
         log.info("create user---Controller");
         int userID = userService.createUser(user);
         HttpHeaders headers = new HttpHeaders();
-		//headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
+		headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
 		return new ResponseEntity<User>(headers, HttpStatus.CREATED);
 
     }
