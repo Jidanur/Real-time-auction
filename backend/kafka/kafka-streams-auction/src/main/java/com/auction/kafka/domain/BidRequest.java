@@ -2,20 +2,33 @@ package com.auction.kafka.domain;
 
 import java.sql.Timestamp;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
 public class BidRequest {
     
+    @JsonProperty("bidderID")
     private int bidderID;
     
+    @JsonProperty("auctionID")
     private int auctionID;
 
+    @JsonProperty("bidPrice")
     private int bidPrice;
 
+    @JsonProperty("timeOfBid")
     private Timestamp timeOfBid;
+
+    public BidRequest(){
+
+    }
+
+    public String toString(){
+        String ret = "bidderId:" + this.bidderID + ", auctionID:" + this.auctionID + ", bid:$"+this.bidPrice+ ", time:"+ this.timeOfBid;
+        return ret;
+    }
 }

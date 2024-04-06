@@ -1,6 +1,7 @@
 package com.auction.kafka.dao;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -12,6 +13,7 @@ import com.auction.kafka.domain.Auction;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +35,17 @@ public class AuctionDao {
         log.info("creating new Auction record-- AuctionDao");
         int id = -1;
         try{
-            auction.setStartTime(new Timestamp(System.currentTimeMillis())); /// sets current time as start time
+            ///setting current time as start and adding value to add time to end;
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            auction.setStartTime(currentTime); /// sets current time as start time
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(currentTime.getTime());
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+        
+            auction.setEndTime(new Timestamp(calendar.getTimeInMillis()));
+            auction.setCurrentBid(0);
+            auction.setNumOfBids(0);
+
             getSession().persist(auction);
             id = auction.getAuctionID();
             log.info("successfully created auction with auctionID--"+id);
@@ -70,7 +82,17 @@ public class AuctionDao {
         return (resultList!=null && resultList.size()>0)?resultList:null;
     }
 
+    public void UpdateBid(Auction auction){
+        CriteriaBuilder cb = getSession().getCriteriaBuilder();
+        CriteriaUpdate<Auction> criteriaUpdate = cb.createCriteriaUpdate(Auction.class);
+        Root<Auction> root = criteriaUpdate.from(Auction.class);
+        criteriaUpdate.set("currentBid", auction.getCurrentBid());
+        criteriaUpdate.set("winnerID", auction.getWinnerID());
+        criteriaUpdate.set("numOfBids", auction.getNumOfBids());
+        criteriaUpdate.where(cb.equal(root.get("auctionID"), auction.getAuctionID()));
 
+        getSession().createMutationQuery(criteriaUpdate).executeUpdate();
+    }
 
 
 

@@ -12,22 +12,13 @@ import com.auction.kafka.topology.KafkaStreamsAuctionTopology;
 @Profile("kafka")
 public class KafkaStreamsAuctionConfiguration {
 
-    
-    public static final String[] TOPICS= KafkaStreamsAuctionTopology.getTopics();
-
-
-    @Bean
-    public NewTopic topicRequests() {
-        return TopicBuilder.name(TOPICS[0]).partitions(4).replicas(1).build();
-    }
-
     @Bean
     public NewTopic topicBidRequests() {
-        return TopicBuilder.name(TOPICS[1]).partitions(4).replicas(1).build();
+        return TopicBuilder.name(KafkaStreamsAuctionTopology.BID_TOPIC).partitions(4).replicas(1).build();
     }
 
     @Bean
-    public NewTopic topicDbRequests() {
-        return TopicBuilder.name(TOPICS[2]).partitions(4).replicas(1).build();
+    public NewTopic topicValidBidRequests() {
+        return TopicBuilder.name(KafkaStreamsAuctionTopology.BID_TOPIC).partitions(4).replicas(1).build();
     }
 }

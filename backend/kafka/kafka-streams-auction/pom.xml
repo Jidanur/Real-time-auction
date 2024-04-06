@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<kafka.version>3.7.0</kafka.version>
+		<ehcache.version>3.10.8</ehcache.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -27,11 +28,10 @@
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<version>3.10.8</version>
+			<version>${ehcache.version}</version>
 			<classifier>jakarta</classifier>
 		</dependency>
 
