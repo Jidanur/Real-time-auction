@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -18,12 +19,47 @@ import NavBar from './NavBar';
 var MAX_DESCRIPTION = 5000;
 
 function BidderViewAuction({ images }) {
-    // console.log(data);
+    const [formBid, setFormBid] = useState({
+        bid_price:'',
+        auction_id:'',
+        date_time:'',
+    });
 
-    // data.forEach(image =>
-    // {
-    //     console.log(image);
-    // });
+    const submitBid = async (bid) => {
+        console.log("Submit a bid");
+        try {
+            const response = await fetch('http://127.0.0.1:8080/bid/placebid', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    auctionID: 2,
+                    user_id: 1,
+
+                    bidPrice: formBid.bid_price,
+                    timeOfBid: formBid.date_time
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Success:', data);
+            alert("Bid submitted, thanks");
+            //window.location.assign("/");
+            window.location.href = '/';
+
+            // Reset the form or navigate the user to a success page, etc.
+        } catch (error) {
+            console.error('There was an error with the form submission:', error);
+        }
+    };
+
+    // submitBid()
+
     return (
         <div style={{ backgroundColor: Theme.palette.primary.white }}>
 
@@ -33,7 +69,7 @@ function BidderViewAuction({ images }) {
                     <Container style={{ marginTop: '20px', marginLeft: '20px' }}>
                         <Form>
                             <Typography variant="h4" gutterBottom>
-                             auction title
+                                auction title
                             </Typography>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Auction title</Form.Label>
@@ -88,11 +124,9 @@ function BidderViewAuction({ images }) {
                                             <img
                                                 className="d-block w-10"
                                                 src={image}
-                                                  alt={`Slide ${index}`}
+                                                alt={`Slide ${index}`}
                                                 style={{ maxWidth: '700px', maxHeight: '200px', margin: 'auto' }}
                                             />
-
-
                                         </Carousel.Item>
                                     ))}
 
@@ -126,10 +160,15 @@ function BidderViewAuction({ images }) {
                                 <InputGroup.Text>.00</InputGroup.Text>
                             </InputGroup>
                             <div style={{ display: 'flex', justifyContent: "center" }}>
-                                <Button variant="primary" type="submit" 
-                                style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', 
-                                color: 'black', display: 'flex',
-                                 backgroundColor: Theme.palette.secondary.light_green }} >
+                                <Button variant="primary" type="submit"
+                                    style={{
+                                        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
+                                        color: 'black', display: 'flex',
+                                        backgroundColor: Theme.palette.secondary.light_green
+                                    }}
+                                    value={formBid.bid_price}
+                                    onClick={submitBid(formBid.bid_price)}
+                                >
                                     <b>Confirm</b>
                                 </Button>
                             </div>
@@ -179,35 +218,35 @@ function BidderViewAuction({ images }) {
                 </Col>
 
                 <Col sx lg="5"
-               >
+                >
                     <br>
-    
+
                     </br>
                     <h5>Top 10 recently bids:</h5>
-                   
+
                     <ListGroup >
-                    <Container style={{ backgroundColor: Theme.palette.primary.light_orange }}>
-                        <ListGroup.Item>
-                            <Row > 
-                            <Col>Mar 27, 2024 (12:25 AM) </Col>
-                             <Col> Luis</Col>
-                            <Col>$
-                                25
-                            </Col>
-                        </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Row > 
-                            <Col>Mar 27, 2024 (12:19 AM) </Col>
-                             <Col> Ivy</Col>
-                            <Col>$
-                                20
-                            </Col>
-                        </Row>
-                        </ListGroup.Item>
+                        <Container style={{ backgroundColor: Theme.palette.primary.light_orange }}>
+                            <ListGroup.Item>
+                                <Row >
+                                    <Col>Mar 27, 2024 (12:25 AM) </Col>
+                                    <Col> Luis</Col>
+                                    <Col>$
+                                        25
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row >
+                                    <Col>Mar 27, 2024 (12:19 AM) </Col>
+                                    <Col> Ivy</Col>
+                                    <Col>$
+                                        20
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
                         </Container>
                     </ListGroup>
-                
+
                 </Col>
 
             </Row>

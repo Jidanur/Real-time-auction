@@ -27,7 +27,7 @@ export const CreateAuction = () => {
     description: '',
 
     startPrice: '',
-    iamges: '',
+    images: '',
 
     startDate: '',
     startTime: '',
@@ -334,42 +334,67 @@ const handleCreate = (event) => {
 const postAuction = async () => {
   console.log("Posting a new auction");
   try {
-    const response = await fetch('http://127.0.0.1:5000/create-auction', { // Make sure this matches your Flask endpoint for lost items
+    const responseAuction = await fetch('http://127.0.0.1:8080/auction/createauction', { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: formAuction.title,
-        user: formAuction.user,
-        description: formAuction.description,
+        sellerID:1,
+        winnerID:2,
+        auctionTitle: formAuction.title,
+        auctionDescription: formAuction.description,
+       // imageName:
+       initialPrice:formAuction.startPrice,
+       startTime:`${formAuction.startDate}T${formAuction.startTime}`,
+       endTime:`${formAuction.endDate}T${formAuction.endTime}`,
 
-        iamges: formAuction.iamges,
-
-        startPrice: formAuction.startPrice,
-
-        startDate: formAuction.startDate, // Make sure this key matches what your backend expects
-        startTime: formAuction.startTime,
-        endDate: formAuction.endDate,
-        endTime: formAuction.endTime,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (!responseAuction.ok) {
+      throw new Error(`HTTP error! status: ${responseAuction.status}`);
     }
 
-    const data = await response.json();
-    console.log('Success:', data);
-    alert("Auction added, thanks");
+    const data = await responseAuction.json();
+    console.log('Added auction nSuccess:', data);
+    //alert("Auction added, thanks");
     //window.location.assign("/");
-    window.location.href = '/';
+   // window.location.href = '/';
+
+    // Reset the form or navigate the user to a success page, etc.
+  } catch (error) {
+    console.error('There was an error with the form submission:', error);
+  }
+
+  try {
+    const responseImage = await fetch('http://127.0.0.1:8080/auction/upload-images', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        image:formAuction.images,
+      }),
+    });
+
+    if (!responseImage.ok) {
+      throw new Error(`Upload iamge: HTTP error! status: ${responseImage.status}`);
+    }
+
+    const data = await responseImage.json();
+    console.log('Image updlaoad Success:', data);
+   alert("Images added, thanks");
+    //window.location.assign("/");
+   // window.location.href = '/';
 
     // Reset the form or navigate the user to a success page, etc.
   } catch (error) {
     console.error('There was an error with the form submission:', error);
   }
 };
+
+
 
 return (
   <div style={{ backgroundColor: Theme.palette.primary.dark_orange }}>
@@ -435,9 +460,12 @@ return (
           </Form.Control.Feedback>
         </InputGroup>
 
-        <Form.Group controlId="formFileMultiple" className="mb-3">
+        <Form.Group controlId="images" className="mb-3">
           <Form.Label>Images</Form.Label>
-          <Form.Control type="file" multiple />
+          <Form.Control type="file" multiple 
+          name='images'
+          value={formAuction.images}
+          />
         </Form.Group>
 
 
