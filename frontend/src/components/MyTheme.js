@@ -6,13 +6,15 @@ import { createTheme } from '@mui/material/styles';
 const Theme = createTheme({
   palette: {
     primary: {
-      main: '#a10707', // Orange color
-      child2: '#f89d00',
-      child1: '#ffffff',
-      child3: '#eaaa5c',
+      'main':'#1ea107',
+      'red' :'#a10707', // Orange color
+      'light_orange': '#f4af36',
+      'white': '#ffffff',
+      'dark_orange': '#db9d52',
     },
     secondary: {
-      main: '#25f741', // Brownish color
+      'main':'#db9c4e',
+      'light_green': '#25f741', // Brownish color
     },
   },
 });

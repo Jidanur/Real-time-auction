@@ -8,7 +8,7 @@ export const MAX_CHARACTERS =
     MAX_EMAIL: 100,
     MAX_PASSWORD: 100,
     MAX_YEAR: 2100,
-    MIN_YEAR: 1900
+    MIN_YEAR: 1900.
 
 }
 

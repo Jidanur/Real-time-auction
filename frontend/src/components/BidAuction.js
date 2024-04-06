@@ -29,7 +29,7 @@ function BidderViewAuction({ images }) {
     //     console.log(image);
     // });
     return (
-        <div style={{ backgroundColor: Theme.palette.primary.child3 }}>
+        <div style={{ backgroundColor: Theme.palette.primary.white }}>
 
             <NavBar />{/* Including the NavBar at the top */}
             <Row>
@@ -124,7 +124,7 @@ function BidderViewAuction({ images }) {
                                 <InputGroup.Text>.00</InputGroup.Text>
                             </InputGroup>
                             <div style={{ display: 'flex', justifyContent: "center" }}>
-                                <Button variant="primary" type="submit" style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', color: 'black', display: 'flex', backgroundColor: Theme.palette.secondary.main }} >
+                                <Button variant="primary" type="submit" style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', color: 'black', display: 'flex', backgroundColor: Theme.palette.secondary.red }} >
                                     <b>Confirm</b>
                                 </Button>
                             </div>

@@ -10,7 +10,7 @@ function Slideshow() {
     <Carousel data-bs-theme="dark">
       <Carousel.Item >
         <img
-         fluid
+         fluid="true"
           className="d-block w-100"
           src={car}
           alt="First slide"

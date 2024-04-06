@@ -1,6 +1,6 @@
-import Form from 'react-bootstrap/Form';
 import { Typography } from '@mui/material';
-import { Button, Container, Col, Row} from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
 import Theme from './MyTheme';
 import NavBar from './NavBar';
@@ -33,7 +33,7 @@ function Login() {
         </Col>
       </Form.Group>    
       <div style={{display:'flex',justifyContent: "center"}}>
-      <Button variant="primary" type="submit"  style={{color:'black',boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display:'flex', backgroundColor: Theme.palette.secondary.main }} >
+      <Button variant="primary" type="submit"  style={{color:'black',boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display:'flex', backgroundColor: Theme.palette.secondary.light_green }} >
                <b>Submit</b>
           
               </Button>

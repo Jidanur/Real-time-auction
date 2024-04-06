@@ -76,7 +76,7 @@ const cardData = [
 ];
 function HomePage() {
   return (
-    <div style={{ backgroundColor: Theme.palette.primary.child3 }}>
+    <div style={{ backgroundColor: Theme.palette.primary.dark_orange }}>
       <div style={{ display: 'flex' }}>
         <NavBar />
       </div>

@@ -1,16 +1,14 @@
-import Form from 'react-bootstrap/Form';
 import { Typography } from '@mui/material';
+import Form from 'react-bootstrap/Form';
 
-import { Button, Container, Col, Row } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 
 import Theme from './MyTheme';
 import NavBar from './NavBar';
 
-
-
-const MAX_CHARACTERS = require('../myConfig.js')
+import { MAX_CHARACTERS } from '../myConfig.js';
 const MAX_USERNAME = MAX_CHARACTERS.MAX_USERNAME
 const MAX_PASSWORD = MAX_CHARACTERS.MAX_PASSWORD
 const MAX_EMAIL = MAX_CHARACTERS.MAX_EMAIL
@@ -32,6 +30,9 @@ function Signup() {
 
 
   const handleChange = (e) => {
+
+    // console.log("MAx username ")
+    // console.log(MAX_CHARACTERS.MAX_EMAIL)
     const { name, value } = e.target;
 
 
@@ -166,7 +167,7 @@ function Signup() {
             </Col>
           </Form.Group>
           <div style={{ display: 'flex', justifyContent: "center" }}>
-            <Button variant="primary" type="submit" style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.main }} >
+            <Button variant="primary" type="submit" style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
               <b>Submit</b>
             </Button>
 
