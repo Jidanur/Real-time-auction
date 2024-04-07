@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-KafkaStreamsAuctionApplication<kafka-streams-auction>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.auction.kafka.KafkaStreamsAuctionApplication",
+            "projectName": "kafka-streams-auction",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
