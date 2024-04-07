@@ -100,7 +100,7 @@ function Signup() {
 
       //const data = await response.json();
       //console.log('Success:', data);
-      alert("signup suceed, thanks");
+      alert("Welome, thanks");
       // Reset the form or navigate the user to a success page, etc.
       window.location.href = '/';
     } catch (error) {
