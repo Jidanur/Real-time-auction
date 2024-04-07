@@ -1,6 +1,7 @@
 package com.auction.kafka.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import com.auction.kafka.repository.ImageRepository;
 import com.auction.kafka.util.ImageUtility;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 // @Service
 @RestController
@@ -35,36 +37,33 @@ public class ImageController {
         // this.imageRepository = imageRepository;
         // }
 
-        @PostMapping("/upload/image")
-        public ResponseEntity<ImageUploadResponse> uploadImage(@RequestParam("image") MultipartFile file/*
-                                                                                                         * ,@
-                                                                                                         * RequestParam(
-                                                                                                         * "auction")
-                                                                                                         * auctionID
-                                                                                                         */)
+        @PostMapping("/upload-images")
+        public ResponseEntity<ImageUploadResponse> uploadImage(@RequestParam("images") List<MultipartFile> files/*
+                                                                                                                 * ,@
+                                                                                                                 * RequestParam(
+                                                                                                                 * "auction")
+                                                                                                                 * auctionID
+                                                                                                                 */)
                         throws IOException {
-                log.info("upload image---Controller");
-                log.info("image original file");
-                log.info(file.getOriginalFilename());
 
-                log.info("image type file");
-                log.info(file.getContentType());
+                try {
+                        for (MultipartFile file : files) {
+                                Image newImg = Image.builder()
+                                                .name(file.getOriginalFilename())
+                                                .type(file.getContentType())
+                                                .image(ImageUtility.compressImage(file.getBytes()))
+                                                // .auction(auction)
+                                                .build();
 
-                log.info("file content");
-                // Auction auction=auctionController.getAuctionByID(auctionID);
-                // log.info( imageRepository.save(Image.builder()
-                // .image(ImageUtility.compressImage(file.getBytes())).build()));
-                Image newImg = Image.builder()
-                                .name(file.getOriginalFilename())
-                                .type(file.getContentType())
-                                .image(ImageUtility.compressImage(file.getBytes()))
-                                // .auction(auction)
-                                .build();
+                                imageRepository.save(newImg);
+                        }
 
-                imageRepository.save(newImg);
-                return ResponseEntity.status(HttpStatus.OK)
-                                .body(new ImageUploadResponse("Image uploaded successfully: " +
-                                                file.getOriginalFilename()));
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ImageUploadResponse("Images uploaded successfully"));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(new ImageUploadResponse("Error uploading images: " + e.getMessage()));
+                }
         }
 
 }
