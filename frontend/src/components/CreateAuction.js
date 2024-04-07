@@ -27,7 +27,7 @@ export const CreateAuction = () => {
     description: '',
 
     startPrice: '',
-    images: '',
+    images: [],
 
     startDate: '',
     startTime: '',
@@ -146,6 +146,11 @@ export const CreateAuction = () => {
 
   });
 
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to array
+    setFormAuction({ ...formAuction, images: files }); // Update images state with selected files
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     //console.log("MAX TITLE " +MAX_CHARACTERS.MAX_TITLE);
@@ -159,6 +164,11 @@ export const CreateAuction = () => {
 
     event.target.maxLength = maxLengths[name];
 
+    // if (name==='images')
+    // {
+    //  console.log("just save images in  the form");
+    //  console.log(value);
+    // }
 
     // Update the form data with the truncated value
     setFormAuction({
@@ -324,7 +334,7 @@ const handleCreate = (event) => {
   } else {
     // window.location.href = '/';
     postAuction();
-    setValidated(true);
+   // setValidated(true);
 
 
   }
@@ -368,15 +378,16 @@ const postAuction = async () => {
   }
 
   try {
-    const responseImage = await fetch('http://127.0.0.1:8080/auction/upload-images', { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        image:formAuction.images,
-      }),
-    });
+  const formData = new FormData();
+  for (const file of formAuction.images) {
+    formData.append('images', file);
+  }
+  //formData.append('images', formAuction.images);
+
+  const responseImage = await fetch('http://127.0.0.1:8080/auction/upload-images', { 
+    method: 'POST',
+   body:formData
+  });
 
     if (!responseImage.ok) {
       throw new Error(`Upload iamge: HTTP error! status: ${responseImage.status}`);
@@ -464,7 +475,8 @@ return (
           <Form.Label>Images</Form.Label>
           <Form.Control type="file" multiple 
           name='images'
-          value={formAuction.images}
+        //  value={formAuction.images}
+          onChange={handleFileChange}
           />
         </Form.Group>
 
@@ -506,7 +518,7 @@ return (
                     disabled={fieldDisabled.startTime}
 
                   />
-                  {!validated.startTime && <small className="text-danger">Start time cannot be in the past</small>}
+                  {!validated.startTime &&!fieldDisabled.startTime && <small className="text-danger">Start time cannot be in the past</small>}
                   <Form.Control.Feedback type="invalid">
                     Please provide the time auction will start.
                   </Form.Control.Feedback>
@@ -529,7 +541,7 @@ return (
                     min={getCurrentDate()} />
                 </Form.Group>
                 {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
-                {!validated.endDate && <small className="text-danger">End date cannot be before start date</small>}
+                {!validated.endDate && !fieldDisabled.endDate && <small className="text-danger">End date cannot be before start date</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid date for the auction end.
                 </Form.Control.Feedback>
@@ -546,7 +558,7 @@ return (
                   //  min={getCurrentDateTime()}
                   />
                 </Form.Group>
-                {!validated.endTime && <small className="text-danger">End time cannot be before start time.</small>}
+                {!validated.endTime && !fieldDisabled.endTime && <small className="text-danger">End time cannot be before start time.</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide the time auction will end.
                 </Form.Control.Feedback>
