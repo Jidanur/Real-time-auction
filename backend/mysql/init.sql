@@ -21,3 +21,10 @@ CREATE TABLE auction_table (
     FOREIGN KEY (sellerID) REFERENCES user_table(userID),
     FOREIGN KEY (winnerID) REFERENCES user_table(userID)
 );
+
+CREATE TABLE image_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(1000),
+    type VARCHAR(1000),
+    image LONGBLOB NOT NULL
+);
