@@ -82,7 +82,7 @@ public class AuctionDao {
         return (resultList!=null && resultList.size()>0)?resultList:null;
     }
 
-    public void UpdateBid(Auction auction){
+    public void UpdateAuctionBid(Auction auction){
         CriteriaBuilder cb = getSession().getCriteriaBuilder();
         CriteriaUpdate<Auction> criteriaUpdate = cb.createCriteriaUpdate(Auction.class);
         Root<Auction> root = criteriaUpdate.from(Auction.class);
