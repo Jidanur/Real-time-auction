@@ -356,6 +356,7 @@ const postAuction = async () => {
         auctionDescription: formAuction.description,
        // imageName:
        initialPrice:formAuction.startPrice,
+      
        startTime:`${formAuction.startDate}T${formAuction.startTime}`,
        endTime:`${formAuction.endDate}T${formAuction.endTime}`,
 

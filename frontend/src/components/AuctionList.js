@@ -3,9 +3,11 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
+import { useNavigate } from 'react-router-dom';
 
-function AuctionList({  }) {
+function AuctionList() {
   const [cardData, setCardData] = useState([]);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -30,6 +32,14 @@ function AuctionList({  }) {
     preLoad();
   }, []); // Empty dependency array ensures that this effect runs only once after the component mounts
 
+  const handleCardClick=(auctionID)=>{
+   console.log("the id shoudl be : " +auctionID);
+    //window.location.href= move to the page that laod the auction view
+    navigate(`/auction/${auctionID}`); 
+
+    
+
+  }
 
     return (
         <Row xs={1} md={2} lg={4} className="g-4"  >
@@ -37,7 +47,9 @@ function AuctionList({  }) {
           {cardData.map((card, idx) => (
            // console.log("card "+idx+" : +card.auctionTitle);
             <Col key={idx}>
-              <Card>
+              <Card 
+          onClick={() => handleCardClick(card.auctionID)}
+           >
                 {/* <Card.Img
                  variant="top" 
                  //src={card.auction} 
