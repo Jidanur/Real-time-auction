@@ -1,5 +1,7 @@
 package com.auction.kafka.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,18 @@ public class AuctionController {
             return new ResponseEntity<Auction>(HttpStatus.NOT_FOUND);
         }
         
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Auction>> getAll() {
+        List<Auction> allusers = auctionService.getAuctionsList();
+
+        if(allusers != null){
+            return new ResponseEntity<List<Auction>>(allusers,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<List<Auction>>(HttpStatus.NO_CONTENT);
+        }
     }
     
 }

@@ -57,4 +57,8 @@ public class Auction {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_time")
     private Timestamp endTime;
+
+    public void addBid(){
+        numOfBids++;
+    }
 }

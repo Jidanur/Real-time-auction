@@ -1,5 +1,7 @@
 package com.auction.kafka.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import com.auction.kafka.domain.User;
 import com.auction.kafka.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 
 
@@ -48,6 +51,19 @@ public class UserController {
         }
        
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allusers = userService.getAllUsers();
+
+        if(allusers != null){
+            return new ResponseEntity<List<User>>(allusers,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
+        }
+    }
+    
     
     
     

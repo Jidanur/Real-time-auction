@@ -7,7 +7,11 @@ import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.stereotype.Component;
+
+import com.auction.kafka.domain.BidRequest;
+import com.auction.kafka.service.BidService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,25 +21,24 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaStreamsAuctionTopology {
     
     
-    public static final String[] TOPICS = {"topic-requests", "topic-bid-request", "topic-db-request"};
+    public static final String BID_TOPIC = "topic-bid-request";
+    public static final String VALID_BID_TOPIC = "valid-bid-requests";
 
-    public static String[] getTopics(){
-        return TOPICS;
-    }
+    @Autowired
+    private BidService bidService;
 
     @Autowired
     public void process(StreamsBuilder streamsBuilder){
+        
+        //filter invalid messages
+        var incomingStream = streamsBuilder.stream(BID_TOPIC, Consumed.with(Serdes.String(), new JsonSerde<BidRequest>(BidRequest.class)));
 
-        var generalStream = streamsBuilder.stream(TOPICS[0], Consumed.with(Serdes.String(), Serdes.String()));
+        incomingStream.print(Printed.<String, BidRequest>toSysOut().withLabel(BID_TOPIC));
 
-        generalStream.print(Printed.<String, String>toSysOut().withLabel(TOPICS[0]));
+        var validatebidStream = incomingStream.filter((key, value) -> bidService.validateBid(value));
 
-        var bidStream = generalStream.filter((key, value) -> value.contains("BID"));
-        var dbStream = generalStream.filter((key, value) -> value.contains("DB"));
-
-        bidStream.to(TOPICS[1], Produced.with(Serdes.String(), Serdes.String()));
-        dbStream.to(TOPICS[2], Produced.with(Serdes.String(), Serdes.String()));
-
+        validatebidStream.to(VALID_BID_TOPIC, Produced.with(Serdes.String(), new JsonSerde<BidRequest>(BidRequest.class)));
+        
         log.info("Kafka Streams Auction Topology created successfully.");
 
     }
