@@ -4,6 +4,7 @@
     updateCheck="true" monitoring="autodetect" dynamicConfig="true"> 
 <defaultCache 
         maxEntriesLocalHeap="10000" 
+        maxBytesLocalHeap="100M"
         eternal="false" 
         timeToIdleSeconds="3600" 
         timeToLiveSeconds="7200" 
