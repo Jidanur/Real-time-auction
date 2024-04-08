@@ -377,12 +377,14 @@ const postAuction = async () => {
     if (!responseAuction.ok) {
       throw new Error(`HTTP error! status: ${responseAuction.status}`);
     }
+    else{
 
     const data = await responseAuction.json();
     console.log('Added auction nSuccess:', data);
     //alert("Auction added, thanks");
     //window.location.assign("/");
    // window.location.href = '/';
+    }
 
     // Reset the form or navigate the user to a success page, etc.
   } catch (error) {
@@ -404,12 +406,15 @@ const postAuction = async () => {
     if (!responseImage.ok) {
       throw new Error(`Upload iamge: HTTP error! status: ${responseImage.status}`);
     }
+    else{
 
     const data = await responseImage.json();
-    console.log('Image updlaoad Success:', data);
-   alert("Images added, thanks");
+    console.log('Image updload Success:', data);
+   alert("Auction created, thanks");
+   navigate('/');
     //window.location.assign("/");
    // window.location.href = '/';
+    }
 
     // Reset the form or navigate the user to a success page, etc.
   } catch (error) {

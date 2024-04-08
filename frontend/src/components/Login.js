@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 
 import Cookies from 'js-cookie';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Theme from './MyTheme';
 import NavBar from './NavBar';
@@ -48,7 +48,7 @@ function Login() {
     const max_lengths = {
       username: MAX_USERNAME,
       password: MAX_PASSWORD,
-      // email: MAX_EMAIL
+       email: MAX_EMAIL
     }
     e.target.max_length = max_lengths[name];
 
@@ -72,9 +72,11 @@ function Login() {
 
   }
 
+  const navigate=useNavigate();
+
   const postLogin = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8080/user/createuser', {
+      const response = await fetch('http://127.0.0.1:8080/user/login', {
         method: 'POST',
         // mode: 'no-cors', 
         headers: {
@@ -82,8 +84,8 @@ function Login() {
           //'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({
-          userName: formLogin.username,
-          //  email: formSignup.email,
+          //userName: formLogin.username,
+            email: formLogin.email,
           userPassword: formLogin.password
         }),
       });
@@ -91,20 +93,28 @@ function Login() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      else{
+
+        try{
+            const data = await response.json();
+            console.log('Login Success:', data);
 
 
-      const data = await response.json();
-      console.log('Login Success:', data);
 
+            var userID=data['userID'];
 
+            console.log("userID is "+userID);
 
-      var userID=data['userID'];
-
-      console.log("userID "+userID);
-
-      const expirationTime = new Date(new Date().getTime() + 6000000);
-      Cookies.set(COOKIE_USER_ID_KEY, JSON.stringify(userID), { expires: expirationTime });
-      console.log("cookie set");
+            const expirationTime = new Date(new Date().getTime() + 6000000);
+            Cookies.set(COOKIE_USER_ID_KEY, JSON.stringify(userID), { expires: expirationTime });
+            console.log("cookie set");
+            navigate('/');
+        }
+        catch(error)
+        {
+          console.log("There was an error with getting the login response ", error);
+        }
+      }
 
 
       //window.location.href = '/';
@@ -125,17 +135,17 @@ function Login() {
             Login
           </Typography>
 
-          <Form.Group as={Row} className="mb-3" controlId="username">
+          <Form.Group as={Row} className="mb-3" controlId="email">
             <Form.Label column sm="2">
-              Username
+              Email
             </Form.Label>
             <Col sm="10">
               <Form.Control
                 required
                 type="text"
-                name="username"
-                placeholder="username"
-                value={formLogin.username}
+                name="email"
+                placeholder="email"
+                value={formLogin.email}
                 onChange={handleChange}
               />
             </Col>

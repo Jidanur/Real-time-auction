@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 
 import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 import Theme from './MyTheme';
@@ -21,6 +21,8 @@ function Signup() {
     password: '',
     email: '',
   })
+
+  const navigate=useNavigate();
 
   const [maxReached, setMaxReached] = useState({
     username: false,
@@ -99,14 +101,18 @@ function Signup() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      else
+      {
 
       //const data = await response.json();
       //console.log('Success:', data);
-      alert("Welome, thanks");
+      alert("Signup suceed. Please login.Thanks");
+      navigate('/login');
+      }
 
 
       // Reset the form or navigate the user to a success page, etc.
-      window.location.href = '/';
+      // window.location.href = '/';
     } catch (error) {
       console.error('There was an error with the form submission:', error);
     }

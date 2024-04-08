@@ -191,12 +191,15 @@ function BidderViewAuction( ) {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            else{
 
             const data = await response.json();
             console.log('Success:', data);
             alert("Bid submitted, thanks");
+            
             //window.location.assign("/");
            // window.location.href = '/';
+            }
 
             // Reset the form or navigate the user to a success page, etc.
         } catch (error) {
