@@ -172,7 +172,7 @@ function BidderViewAuction( ) {
         else{
       
 
-        let auctioner_id=parseInt(Cookies.get(COOKIE_USER_ID_KEY));
+        let bidder_id=parseInt(Cookies.get(COOKIE_USER_ID_KEY));
         try {
             const response = await fetch('http://127.0.0.1:8080/bid/placebid', { 
                 method: 'POST',
@@ -181,7 +181,7 @@ function BidderViewAuction( ) {
                 },
                 body: JSON.stringify({
                     auctionID: auctionData.id,
-                    bidderID: 1,
+                    bidderID: bidder_id,
 
                     bidPrice: bid,
                     timeOfBid: formBid.date_time
