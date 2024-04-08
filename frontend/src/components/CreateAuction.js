@@ -9,14 +9,15 @@ import Row from 'react-bootstrap/Row';
 import Theme from './MyTheme';
 import NavBar from './NavBar';
 
+import { useNavigate } from 'react-router-dom';
 
+import Cookies from 'js-cookie';
 
 import { MAX_CHARACTERS } from '../myConfig.js';
 const MAX_TITLE = MAX_CHARACTERS.MAX_TITLE;
 const MAX_DESCRIPTION = MAX_CHARACTERS.MAX_DESCRIPTION;
 const MAX_DATE = MAX_CHARACTERS.MAX_DATE;
-
-
+const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
 
 
 export const CreateAuction = () => {
@@ -336,13 +337,23 @@ const handleCreate = (event) => {
     postAuction();
    // setValidated(true);
 
-
   }
-
 }
 
 const postAuction = async () => {
   console.log("Posting a new auction");
+  console.log("button was cliked.");
+  const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+  if (!isAuthenticated) {
+    // If user is not authenticated, show an alert and then redirect to login page
+    alert('Session expiered. You need to login to create new auction.');
+    navigate('/login');
+    //return null;
+  }
+  else{
+
+  let auctioner_id=parseInt(Cookies.get(COOKIE_USER_ID_KEY));
+  console.log("the use id get from cookie "+ auctioner_id);
   try {
     const responseAuction = await fetch('http://127.0.0.1:8080/auction/createauction', { 
       method: 'POST',
@@ -350,7 +361,7 @@ const postAuction = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        sellerID:1,
+        sellerID:auctioner_id,
         winnerID:2,
         auctionTitle: formAuction.title,
         auctionDescription: formAuction.description,
@@ -404,7 +415,27 @@ const postAuction = async () => {
   } catch (error) {
     console.error('There was an error with the form submission:', error);
   }
+}
 };
+
+const [showAlert, setShowAlert] = useState(true);
+const navigate = useNavigate();
+
+const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+const handleAlertClose = () => {
+  setShowAlert(false); // Hide the alert
+  navigate('/login');
+};
+
+if (!isAuthenticated && showAlert) {
+  // If user is not authenticated and the alert is shown, display the alert
+  return (
+    <div>
+      <h1 style={{ fontSize: '24px', color: 'red' }}>You need to login to access this page.</h1>
+      <button onClick={() => handleAlertClose()}>Close</button>
+    </div>
+  );
+}
 
 
 
@@ -476,10 +507,14 @@ return (
           <Form.Label>Images</Form.Label>
           <Form.Control type="file" multiple 
           name='images'
+          required
         //  value={formAuction.images}
           onChange={handleFileChange}
           />
         </Form.Group>
+        <Form.Control.Feedback type="invalid">
+            Please provide some pictures of the item.
+          </Form.Control.Feedback>
 
 
         <Row>

@@ -10,15 +10,18 @@ import Carousel from 'react-bootstrap/Carousel';
 
 import Container from 'react-bootstrap/Container';
 
+import Cookies from 'js-cookie';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Theme from './MyTheme';
 import NavBar from './NavBar';
 
 
+
+import { MAX_CHARACTERS } from '../myConfig.js';
+const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
 
 function BidderViewAuction( ) {
     const { auctionID } = useParams();
@@ -62,21 +65,17 @@ function BidderViewAuction( ) {
 
             hour: '2-digit',
             minute: '2-digit',
-            timezone:'+00:00',
+
      
           };
     
         // Splitting Date
         const date = dateTime.toLocaleDateString('en-CA', option_date);
         const format=dateTime.toLocaleTimeString('en-CA',option_time);
-        console.log("To time "+format);
+
     
         // Splitting Time
         const hour = dateTime.getHours()+5;
-        console.log("Input "+dateTimeString);
-        console.log("Datetime "+dateTime);
-
-        console.log("hour "+hour);
 
         const minute = dateTime.getMinutes();
         const meridiem = hour >= 12 ? 'PM' : 'AM';
@@ -159,8 +158,21 @@ function BidderViewAuction( ) {
 
     // }, [endDate, endTime]);
 
+    const navigate=useNavigate();
     const postSubmitBid = async (bid) => {
         console.log("Submit a bid");
+        console.log("button was cliked.");
+        const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+        if (!isAuthenticated) {
+          // If user is not authenticated, show an alert and then redirect to login page
+          alert('Session expiered. You need to login to bid.');
+          navigate('/login');
+          //return null;
+        }
+        else{
+      
+
+        let auctioner_id=parseInt(Cookies.get(COOKIE_USER_ID_KEY));
         try {
             const response = await fetch('http://127.0.0.1:8080/bid/placebid', { 
                 method: 'POST',
@@ -169,9 +181,9 @@ function BidderViewAuction( ) {
                 },
                 body: JSON.stringify({
                     auctionID: auctionData.id,
-                    user_id: 1,
+                    bidderID: 1,
 
-                    bidPrice: formBid.bid_price,
+                    bidPrice: bid,
                     timeOfBid: formBid.date_time
                 }),
             });
@@ -184,18 +196,19 @@ function BidderViewAuction( ) {
             console.log('Success:', data);
             alert("Bid submitted, thanks");
             //window.location.assign("/");
-            window.location.href = '/';
+           // window.location.href = '/';
 
             // Reset the form or navigate the user to a success page, etc.
         } catch (error) {
             console.error('There was an error with the form submission:', error);
         }
+    }
     };
 
     // submitBid()
 
     if (!auctionData) {
-        return <div>Get some drink I am still loading...</div>;
+        return <div>Get some drink, I am still loading...</div>;
     }
     else
 
@@ -305,7 +318,7 @@ function BidderViewAuction( ) {
                                         backgroundColor: Theme.palette.secondary.light_green
                                     }}
                                     value={formBid.bid_price}
-                                    onClick={postSubmitBid(formBid.bid_price)}
+                                    onClick={() => postSubmitBid(formBid.bid_price)}
                                 >
                                     <b>Confirm</b>
                                 </Button>
