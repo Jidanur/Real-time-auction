@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ public class UserDao {
         return id;
     }
 
+    @Cacheable(value = "com.auction.kafka.domain.User", key ="#id" ,unless ="#return == null" )
     public User findbyId(int id){
         log.info("Find User by ID:"+id+ "---UserDao");
         

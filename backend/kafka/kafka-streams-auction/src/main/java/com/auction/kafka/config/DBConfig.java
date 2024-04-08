@@ -15,6 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class DBConfig {
+
+	@Value("${spring.jpa.properties.hibernate.cache.use_second_level_cache}")
+	private String hibernate_cache_use_second_level_cache;
+
+	@Value("${hibernate.cache.region.factory_class}")
+	private String hibernate_cache_region_factory_class;
     
     @Value("${spring.datasource.driver-class-name}")
 	private String DB_DRIVER_CLASS;
@@ -58,8 +64,14 @@ public class DBConfig {
 		sessionFactoryBean.setDataSource(dataSource());
 		sessionFactoryBean.setPackagesToScan("com.auction.kafka");
 		Properties hibernateProps = new Properties();
+		hibernateProps.put("cache.provider_class", "org.hibernate.cache.EhCacheProvider");
+		hibernateProps.put("hibernate.cache.use_second_level_cache", hibernate_cache_use_second_level_cache);
+		hibernateProps.put("hibernate.cache.region.factory_class", "org.hibernate.cache.jcache.JCacheRegionFactory");
+		hibernateProps.put("hibernate.cache.use_query_cache", true);
 		hibernateProps.put("hibernate.show_sql", HIBERNATE_SHOW_SQL);
 		hibernateProps.put("hibernate.hbm2ddl.auto", HIBERNATE_HBM2DDL_AUTO);
+		hibernateProps.put("hibernate.javax.cache.missing_cache_strategy", "create");
+		hibernateProps.put("hibernate.cache.provider_configuration_file_resource_path", "ehcache.xml");
 		sessionFactoryBean.setHibernateProperties(hibernateProps);
 		return sessionFactoryBean;
 	}

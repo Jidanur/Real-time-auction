@@ -2,6 +2,8 @@ package com.auction.kafka.domain;
 
 import java.sql.Timestamp;
 
+import org.springframework.context.annotation.Profile;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -9,6 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Profile("kafka")
 public class BidRequest {
     
     @JsonProperty("bidderID")
