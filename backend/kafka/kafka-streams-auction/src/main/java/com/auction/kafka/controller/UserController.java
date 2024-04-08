@@ -33,9 +33,25 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
         log.info("create user---Controller");
         int userID = userService.createUser(user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
-        return new ResponseEntity<User>(headers, HttpStatus.CREATED);
+        if(userID == -1){
+            return new ResponseEntity<User>(HttpStatus.NOT_ACCEPTABLE);
+        }
+        else{
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
+            return new ResponseEntity<User>(headers, HttpStatus.CREATED);
+        }
+
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> getUserByID(@RequestBody User user) {
+        User getUser = userService.userLogin(user);
+        if (getUser != null) {
+            return new ResponseEntity<User>(getUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
 
     }
 

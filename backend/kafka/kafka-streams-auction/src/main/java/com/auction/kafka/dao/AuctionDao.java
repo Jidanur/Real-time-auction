@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.auction.kafka.domain.Auction;
@@ -55,6 +56,7 @@ public class AuctionDao {
         return id;
     }
 
+    @Cacheable(value = "com.auction.kafka.domain.Auction", key = "#auctionID", unless = "#result == null")
     public Auction getAuctionById(int auctionID) {
         log.info("Find Auction by ID" + auctionID);
 
@@ -80,7 +82,12 @@ public class AuctionDao {
         return (resultList != null && resultList.size() > 0) ? resultList : null;
     }
 
-    public void UpdateAuctionBid(Auction auction) {
+    // @Caching(evict = {@CacheEvict(value = "com.auction.kafka.domain.Auction", key
+    // = "#auction.getAuctionID()")},
+    // put={@org.springframework.cache.annotation.CachePut(value =
+    // "com.auction.kafka.domain.Auction", key = "#auction.getAuctionID()")})
+    public Auction UpdateAuctionBid(Auction auction) {
+
         CriteriaBuilder cb = getSession().getCriteriaBuilder();
         CriteriaUpdate<Auction> criteriaUpdate = cb.createCriteriaUpdate(Auction.class);
         Root<Auction> root = criteriaUpdate.from(Auction.class);
@@ -90,6 +97,8 @@ public class AuctionDao {
         criteriaUpdate.where(cb.equal(root.get("auctionID"), auction.getAuctionID()));
 
         getSession().createMutationQuery(criteriaUpdate).executeUpdate();
+
+        return auction;
     }
 
 }
