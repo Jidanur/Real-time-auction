@@ -1,7 +1,10 @@
 package com.auction.kafka.controller;
 
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 public class ImageUploadResponse {
     private String message;
 
@@ -9,11 +12,4 @@ public class ImageUploadResponse {
         this.message = message;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

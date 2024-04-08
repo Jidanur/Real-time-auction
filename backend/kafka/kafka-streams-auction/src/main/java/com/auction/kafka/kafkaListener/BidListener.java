@@ -1,6 +1,7 @@
 package com.auction.kafka.kafkaListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ import com.auction.kafka.topology.KafkaStreamsAuctionTopology;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-//@Profile("listen")
+@Profile("kafka")
 @Slf4j
 public class BidListener {
     
