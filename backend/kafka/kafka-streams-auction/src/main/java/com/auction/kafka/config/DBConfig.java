@@ -18,9 +18,6 @@ public class DBConfig {
 
 	@Value("${spring.jpa.properties.hibernate.cache.use_second_level_cache}")
 	private String hibernate_cache_use_second_level_cache;
-
-	@Value("${hibernate.cache.region.factory_class}")
-	private String hibernate_cache_region_factory_class;
     
     @Value("${spring.datasource.driver-class-name}")
 	private String DB_DRIVER_CLASS;

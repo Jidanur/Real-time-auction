@@ -44,7 +44,7 @@ public class UserDao {
         return id;
     }
 
-    @Cacheable(value = "com.auction.kafka.domain.User", key ="#id" ,unless ="#return == null" )
+    @Cacheable(value = "com.auction.kafka.domain.User", key ="#id", unless ="#result == null")
     public User findbyId(int id){
         log.info("Find User by ID:"+id+ "---UserDao");
         
