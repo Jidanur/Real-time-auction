@@ -74,31 +74,31 @@ function Login() {
 
   const postLogin = async () => {
     try {
-      // const response = await fetch('http://127.0.0.1:8080/user/createuser', {
-      //   method: 'POST',
-      //   // mode: 'no-cors', 
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     //'Access-Control-Allow-Origin': '*',
-      //   },
-      //   body: JSON.stringify({
-      //     userName: formLogin.username,
-      //     //  email: formSignup.email,
-      //     userPassword: formLogin.password
-      //   }),
-      // });
+      const response = await fetch('http://127.0.0.1:8080/user/createuser', {
+        method: 'POST',
+        // mode: 'no-cors', 
+        headers: {
+          'Content-Type': 'application/json',
+          //'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({
+          userName: formLogin.username,
+          //  email: formSignup.email,
+          userPassword: formLogin.password
+        }),
+      });
 
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-
-
-      // const data = await response.json();
-      // console.log('Login Success:', data);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
 
+      const data = await response.json();
+      console.log('Login Success:', data);
 
-      var userID=999;//data.['userID']
+
+
+      var userID=data['userID'];
 
       console.log("userID "+userID);
 
