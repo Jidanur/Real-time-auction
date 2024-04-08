@@ -39,7 +39,7 @@ public class AuctionService {
             currentAuction.setCurrentBid(bidPrice);
             currentAuction.setWinnerID(bid.getBidderID());
             currentAuction.addBid();
-            auctionDao.UpdateBid(currentAuction);
+            auctionDao.UpdateAuctionBid(currentAuction);
         }
 
     }

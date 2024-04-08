@@ -1,16 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JS
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 
 
 
-import HomePage from './pages/HomePage';
+import BidderViewAuction from './components/BidAuction';
+import CreateAuction from './components/CreateAuction';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import CreateAuction from './components/CreateAuction';
-import BidderViewAuction from './components/BidAuction';
+import HomePage from './pages/HomePage';
 
 import bike from '../src/images/bike.jpg';
 
@@ -30,7 +30,7 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/create-auction" element={<CreateAuction/>} />
-        <Route path="/auction" element={<BidderViewAuction images={images}/>} />
+        <Route path="/auction/:auctionID" element={<BidderViewAuction/>} />
 
         {/* Add more routes if needed */}
       </Routes>

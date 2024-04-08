@@ -9,14 +9,15 @@ import Row from 'react-bootstrap/Row';
 import Theme from './MyTheme';
 import NavBar from './NavBar';
 
+import { useNavigate } from 'react-router-dom';
 
+import Cookies from 'js-cookie';
 
 import { MAX_CHARACTERS } from '../myConfig.js';
 const MAX_TITLE = MAX_CHARACTERS.MAX_TITLE;
 const MAX_DESCRIPTION = MAX_CHARACTERS.MAX_DESCRIPTION;
 const MAX_DATE = MAX_CHARACTERS.MAX_DATE;
-
-
+const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
 
 
 export const CreateAuction = () => {
@@ -27,7 +28,7 @@ export const CreateAuction = () => {
     description: '',
 
     startPrice: '',
-    images: '',
+    images: [],
 
     startDate: '',
     startTime: '',
@@ -146,6 +147,11 @@ export const CreateAuction = () => {
 
   });
 
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to array
+    setFormAuction({ ...formAuction, images: files }); // Update images state with selected files
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     //console.log("MAX TITLE " +MAX_CHARACTERS.MAX_TITLE);
@@ -159,6 +165,11 @@ export const CreateAuction = () => {
 
     event.target.maxLength = maxLengths[name];
 
+    // if (name==='images')
+    // {
+    //  console.log("just save images in  the form");
+    //  console.log(value);
+    // }
 
     // Update the form data with the truncated value
     setFormAuction({
@@ -324,15 +335,25 @@ const handleCreate = (event) => {
   } else {
     // window.location.href = '/';
     postAuction();
-    setValidated(true);
-
+   // setValidated(true);
 
   }
-
 }
 
 const postAuction = async () => {
   console.log("Posting a new auction");
+  console.log("button was cliked.");
+  const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+  if (!isAuthenticated) {
+    // If user is not authenticated, show an alert and then redirect to login page
+    alert('Session expiered. You need to login to create new auction.');
+    navigate('/login');
+    //return null;
+  }
+  else{
+
+  let auctioner_id=parseInt(Cookies.get(COOKIE_USER_ID_KEY));
+  console.log("the use id get from cookie "+ auctioner_id);
   try {
     const responseAuction = await fetch('http://127.0.0.1:8080/auction/createauction', { 
       method: 'POST',
@@ -340,12 +361,13 @@ const postAuction = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        sellerID:1,
+        sellerID:auctioner_id,
         winnerID:2,
         auctionTitle: formAuction.title,
         auctionDescription: formAuction.description,
        // imageName:
        initialPrice:formAuction.startPrice,
+      
        startTime:`${formAuction.startDate}T${formAuction.startTime}`,
        endTime:`${formAuction.endDate}T${formAuction.endTime}`,
 
@@ -368,15 +390,16 @@ const postAuction = async () => {
   }
 
   try {
-    const responseImage = await fetch('http://127.0.0.1:8080/auction/upload-images', { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        image:formAuction.images,
-      }),
-    });
+  const formData = new FormData();
+  for (const file of formAuction.images) {
+    formData.append('images', file);
+  }
+  //formData.append('images', formAuction.images);
+
+  const responseImage = await fetch('http://127.0.0.1:8080/auction/upload-images', { 
+    method: 'POST',
+   body:formData
+  });
 
     if (!responseImage.ok) {
       throw new Error(`Upload iamge: HTTP error! status: ${responseImage.status}`);
@@ -392,7 +415,27 @@ const postAuction = async () => {
   } catch (error) {
     console.error('There was an error with the form submission:', error);
   }
+}
 };
+
+const [showAlert, setShowAlert] = useState(true);
+const navigate = useNavigate();
+
+const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+const handleAlertClose = () => {
+  setShowAlert(false); // Hide the alert
+  navigate('/login');
+};
+
+if (!isAuthenticated && showAlert) {
+  // If user is not authenticated and the alert is shown, display the alert
+  return (
+    <div>
+      <h1 style={{ fontSize: '24px', color: 'red' }}>You need to login to access this page.</h1>
+      <button onClick={() => handleAlertClose()}>Close</button>
+    </div>
+  );
+}
 
 
 
@@ -464,9 +507,14 @@ return (
           <Form.Label>Images</Form.Label>
           <Form.Control type="file" multiple 
           name='images'
-          value={formAuction.images}
+          required
+        //  value={formAuction.images}
+          onChange={handleFileChange}
           />
         </Form.Group>
+        <Form.Control.Feedback type="invalid">
+            Please provide some pictures of the item.
+          </Form.Control.Feedback>
 
 
         <Row>
@@ -506,7 +554,7 @@ return (
                     disabled={fieldDisabled.startTime}
 
                   />
-                  {!validated.startTime && <small className="text-danger">Start time cannot be in the past</small>}
+                  {!validated.startTime &&!fieldDisabled.startTime && <small className="text-danger">Start time cannot be in the past</small>}
                   <Form.Control.Feedback type="invalid">
                     Please provide the time auction will start.
                   </Form.Control.Feedback>
@@ -529,7 +577,7 @@ return (
                     min={getCurrentDate()} />
                 </Form.Group>
                 {maxReached.date && <small className="text-danger">Maximum {MAX_DATE} characters reached</small>}
-                {!validated.endDate && <small className="text-danger">End date cannot be before start date</small>}
+                {!validated.endDate && !fieldDisabled.endDate && <small className="text-danger">End date cannot be before start date</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid date for the auction end.
                 </Form.Control.Feedback>
@@ -546,7 +594,7 @@ return (
                   //  min={getCurrentDateTime()}
                   />
                 </Form.Group>
-                {!validated.endTime && <small className="text-danger">End time cannot be before start time.</small>}
+                {!validated.endTime && !fieldDisabled.endTime && <small className="text-danger">End time cannot be before start time.</small>}
                 <Form.Control.Feedback type="invalid">
                   Please provide the time auction will end.
                 </Form.Control.Feedback>

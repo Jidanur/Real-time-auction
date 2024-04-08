@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 
 import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 
 import Theme from './MyTheme';
@@ -27,6 +28,7 @@ function Signup() {
     email: false,
   })
   const [validated, setValidated] = useState(false);
+
 
 
   const handleChange = (e) => {
@@ -100,7 +102,9 @@ function Signup() {
 
       //const data = await response.json();
       //console.log('Success:', data);
-      alert("signup suceed, thanks");
+      alert("Welome, thanks");
+
+
       // Reset the form or navigate the user to a success page, etc.
       window.location.href = '/';
     } catch (error) {
@@ -168,10 +172,15 @@ function Signup() {
           </Form.Group>
           <div style={{ display: 'flex', justifyContent: "center" }}>
             <Button variant="primary" type="submit" style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
-              <b>Submit</b>
+              <b>Signup</b>
             </Button>
 
           </div>
+
+
+          <div style={{ textAlign: 'center', marginTop: '10px', fontSize:'14px' }}>
+          Already have an account? <Link to="/login">Login here</Link>
+        </div>
         </Form>
       </Container>
   

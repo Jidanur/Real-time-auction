@@ -27,10 +27,12 @@ public class BidService {
     @Autowired
     private UserService userService;
 
+
+    /// send bid-request to kafka with <key,value> = <auctionID, Bid>
     public void placeBid(BidRequest bid) throws Exception{
         bid.setTimeOfBid(new Timestamp(System.currentTimeMillis()));
-        log.info("message sent", bid.toString());
-        kafkaTemplate.send(KafkaStreamsAuctionTopology.BID_TOPIC,bid);
+        log.info("Bid-request sent to Kafka", bid.toString());
+        kafkaTemplate.send(KafkaStreamsAuctionTopology.BID_TOPIC,String.valueOf(bid.getAuctionID()),bid);
     }
 
     public Boolean validateBid(BidRequest bid){

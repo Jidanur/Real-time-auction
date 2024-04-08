@@ -10,7 +10,7 @@ function Slideshow() {
     <Carousel data-bs-theme="dark">
       <Carousel.Item >
         <img
-         fluid="true"
+        // fluid="true"
           className="d-block w-100"
           src={car}
           alt="First slide"
@@ -36,7 +36,7 @@ function Slideshow() {
       </Carousel.Item>
       <Carousel.Item >
         <img
-        fluid
+       // fluid
           className="d-block w-100"
           src={pokemon_cards}
           alt="Third slide"

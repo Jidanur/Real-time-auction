@@ -1,28 +1,85 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import AuctionCard from './Card';
-import car from '../images/car.png';
-import book from '../images/book.jpg';
-import pokemon_cards from '../images/pokemon-cards.jpeg';
+import { useNavigate } from 'react-router-dom';
 
 
-function AuctionList({ cardData }) {
+import { MAX_CHARACTERS } from '../myConfig.js';
+
+const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
+
+
+function AuctionList() {
+  const [cardData, setCardData] = useState([]);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const preLoad = async () => {
+      try {
+        const responseAuction = await fetch('http://127.0.0.1:8080/auction/all', {
+          method: 'GET',
+        });
+
+        if (!responseAuction.ok) {
+          throw new Error(`HTTP error! status: ${responseAuction.status}`);
+        }
+
+        const data = await responseAuction.json();
+        setCardData(data);
+        console.log('get auction list success:', data);
+      } catch (error) {
+        console.error('List all auctions: There was an error with the form submission:', error);
+      }
+    };
+
+    preLoad();
+  }, []); // Empty dependency array ensures that this effect runs only once after the component mounts
+
+  const [showAlert, setShowAlert] = useState(true);
+
+  const handleCardClick=(auctionID)=>{
+   console.log("the id shoudl be : " +auctionID);
+    //window.location.href= move to the page that laod the auction view
+
+
+    // const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+    // const handleAlertClose = () => {
+    //   setShowAlert(false); // Hide the alert
+    //   navigate('/login');
+    // };
+    
+    // if (!isAuthenticated && showAlert) {
+    //   // If user is not authenticated and the alert is shown, display the alert
+    //   return (
+    //     <div>
+    //       <h1 style={{ fontSize: '24px', color: 'red' }}>You need to login to access this page.</h1>
+    //       <button onClick={() => handleAlertClose()}>Close</button>
+    //     </div>
+    //   );
+    // }
+
+    navigate(`/auction/${auctionID}`); 
+  }
+
     return (
-        <Row xs={1} md={2} lg={4} className="g-4">
+        <Row xs={1} md={2} lg={4} className="g-4"  >
+
           {cardData.map((card, idx) => (
+           // console.log("card "+idx+" : +card.auctionTitle);
             <Col key={idx}>
-              <Card>
-                <Card.Img
+              <Card 
+          onClick={() => handleCardClick(card.auctionID)}
+           >
+                {/* <Card.Img
                  variant="top" 
-                 src={card.imageSrc} 
-                 alt={card.title}
-                style={{ maxWidth: '100%', maxHeight: '150px' }}  />
+                 //src={card.auction} 
+                 alt={card.auctionTitle}
+                style={{ maxWidth: '100%', maxHeight: '150px' }}  /> */}
                 <Card.Body>
-                  <Card.Title>{card.title}</Card.Title>
-                  <Card.Text>{card.description}</Card.Text>
+                  <Card.Title>{card.auctionTitle}</Card.Title>
+                  <Card.Text>{card.auctionDescription}</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
