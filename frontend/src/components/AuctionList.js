@@ -115,7 +115,7 @@ const formatDateTime = (dateTimeString) => {
            // console.log("card "+idx+" : +card.auctionTitle);
             <Col key={idx}>
               <Card  
-              style={{ width: '18rem' , height:'18rem'}}
+              style={{ maxwidth: '18rem' , height:'18rem'}}
               className="clickable-card" 
           onClick={() => handleCardClick(card.auctionID)}
            >

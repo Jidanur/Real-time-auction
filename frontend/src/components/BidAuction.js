@@ -129,6 +129,36 @@ function BidderViewAuction() {
                     //     currentPrice: data.currentBid === 0 ? data.initialPrice : data.currentBid,
 
                     // });
+                    try{
+                        const responseSellerInfo = await fetch(`http://127.0.0.1:8080/user/getuser/${data.sellerID}`,
+                        {
+                            method: 'GET',
+                        });
+                        if (responseSellerInfo.ok)
+                        {
+    
+                            const sellerInfo=await responseSellerInfo.json();
+                            console.log("Reposne: ", sellerInfo);
+                         
+                            console.log("Fetch username succeed.");
+                            setAuctionData(
+                                {
+                                    ...auctionData,
+                                    auctioner:sellerInfo.userName,
+                                }
+                            )
+                        }
+                    }
+                        catch(error)
+                        {
+                            console.error('There was an error with the get username form submission:', error);
+                            alert("There is something wrong with the request. Please clear all cookies and try again. Thanks!");
+                        }
+
+    
+    
+
+
 
                     const responseImages = await fetch(`http://127.0.0.1:8080/auction/get-images/${auctionID}`, {
                         method: 'GET',
@@ -398,14 +428,18 @@ function BidderViewAuction() {
                                     </Button>
                                 </div>
 
-                                <Form.Group className="mb-3" controlId="time_left">
+
+{/* //Timeleft  */}
+                                {/* <Form.Group className="mb-3" controlId="time_left">
                                     <Form.Label style={{ textAlign: 'center' }}>Time Left </Form.Label>
                                     <Form.Control //
                                         //type='hour:minutes'
                                         // value={timeLeft}
                                         disabled
                                     />
-                                </Form.Group>
+                                </Form.Group> */}
+                                <br>
+                                </br>
 
                                 <Row>
                                     <Col>
