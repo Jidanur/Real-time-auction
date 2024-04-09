@@ -44,8 +44,8 @@ public class AuctionDao {
 
             // auction.setEndTime(new Timestamp(calendar.getTimeInMillis()));
 
-            // auction.setCurrentBid(0);
-            // auction.setNumOfBids(0);
+            auction.setCurrentBid(0);
+            auction.setNumOfBids(0);
 
             getSession().persist(auction);
             id = auction.getAuctionID();

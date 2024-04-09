@@ -29,7 +29,7 @@ console.log("button was cliked.");
 else
 {
   console.log("user is logged in already")
-   // navigate(`/create-auction`);
+   navigate(`/create-auction`);
 }
   }
 

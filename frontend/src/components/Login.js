@@ -71,6 +71,24 @@ function Login() {
     }
 
   }
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+  
+    // if (!isEmailDomainValid) {
+    //   alert("Please use a valid @myumanitoba.ca or @umanitoba.ca email address.");
+    //   return;
+    // }
+  
+    if (!form.checkValidity()) {
+      event.stopPropagation();
+    } else {
+      // window.location.href = '/';
+      postLogin();
+     // setValidated(true);
+  
+    }
+  }
 
   const navigate=useNavigate();
 
@@ -98,9 +116,6 @@ function Login() {
         try{
             const data = await response.json();
             console.log('Login Success:', data);
-
-
-
             var userID=data['userID'];
 
             console.log("userID is "+userID);
@@ -130,7 +145,7 @@ function Login() {
     <div>
       <NavBar />{/* Including the NavBar at the top */}
       <Container style={{ marginTop: '20px', marginLeft: '20px' }}>
-        <Form onSubmit={postLogin} >
+        <Form onSubmit={handleLogin} >
           <Typography variant="h4" gutterBottom>
             Login
           </Typography>

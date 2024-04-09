@@ -362,7 +362,7 @@ const postAuction = async () => {
       },
       body: JSON.stringify({
         sellerID:auctioner_id,
-        winnerID:2,
+        //winnerID:0,
         auctionTitle: formAuction.title,
         auctionDescription: formAuction.description,
        // imageName:
