@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 
+import Car from '../images/car.png';
 import { MAX_CHARACTERS } from '../myConfig.js';
 import './css/clickable-card.css';
 
@@ -13,6 +14,7 @@ const MAX_DESCRIPTION_IN_CARD=MAX_CHARACTERS.MAX_DESCRIPTION_IN_CARD;
 
 function AuctionList() {
   const [cardData, setCardData] = useState([]);
+  
   const navigate = useNavigate();
 
 
@@ -28,6 +30,7 @@ function AuctionList() {
         }
 
         const data = await responseAuction.json();
+        data['image']=Car;
         setCardData(data);
         console.log('get auction list success:', data);
       } catch (error) {
@@ -37,6 +40,47 @@ function AuctionList() {
 
     preLoad();
   }, []); // Empty dependency array ensures that this effect runs only once after the component mounts
+
+
+  const splitDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const option_date = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+
+    };
+
+    const option_time = {
+
+        hour: '2-digit',
+        minute: '2-digit',
+
+
+    };
+
+    // Splitting Date
+    const date = dateTime.toLocaleDateString('en-CA', option_date);
+    const format = dateTime.toLocaleTimeString('en-CA', option_time);
+
+
+    // Splitting Time
+    const hour = dateTime.getHours() + 5;
+
+    const minute = dateTime.getMinutes();
+    const meridiem = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12; // Convert 0 to 12
+
+    const time = `${formattedHour < 10 ? '0' : ''}${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${meridiem}`;
+
+    return { date, time };
+}
+
+const formatDateTime = (dateTimeString) => {
+  const {date, time} = splitDateTime(dateTimeString);
+  // Format the date and time as desired
+  return `${date} ${time}`;
+}
 
   const [showAlert, setShowAlert] = useState(true);
 
@@ -77,11 +121,12 @@ function AuctionList() {
            >
                 {/* <Card.Img
                  variant="top" 
-                 //src={card.auction} 
+                //  src={card.image} 
                  alt={card.auctionTitle}
                 style={{ maxWidth: '100%', maxHeight: '150px' }}  /> */}
                 <Card.Body>
-                  <Card.Title>{card.auctionTitle}</Card.Title>
+                  <Card.Title style={{fontSize:'28px'}}>{card.auctionTitle}</Card.Title>
+                  <Card.Text style={{fontSize:'13px'}}>End time: {formatDateTime(card.endTime)}</Card.Text>
                   <Card.Text>          {card.auctionDescription.length > MAX_DESCRIPTION_IN_CARD // Change 100 to your desired length
                   ? `${card.auctionDescription.substring(0, MAX_DESCRIPTION_IN_CARD)}...`
                   : card.auctionDescription}

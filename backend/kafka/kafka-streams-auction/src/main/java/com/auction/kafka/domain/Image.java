@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +39,7 @@ public class Image {
 
     // @ManyToOne
     // @JoinColumn(name = "auctionID", referencedColumnName = "auctionID")
-    // private Auction auction;
+    @Column(name = "auctionID", nullable = false, columnDefinition = "DEFAULT -1")
+    private int auctionID;
 
 }

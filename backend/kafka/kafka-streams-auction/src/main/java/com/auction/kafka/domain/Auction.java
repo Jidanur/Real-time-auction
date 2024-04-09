@@ -21,17 +21,17 @@ import lombok.Setter;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Getter
 @Setter
-@Table(name= "auction_table")
+@Table(name = "auction_table")
 public class Auction {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int auctionID;
 
-    @Column(name="sellerID", nullable = false)
+    @Column(name = "sellerID", nullable = false)
     private int sellerID;
 
-    @Column(name = "winnerID", columnDefinition = "DEFAULT -1")
+    @Column(name = "winnerID"/* , columnDefinition = "DEFAULT -1" */)
     private int winnerID;
 
     @Column(name = "auction_title", length = 200)
@@ -63,7 +63,7 @@ public class Auction {
     @Column(name = "end_time")
     private Timestamp endTime;
 
-    public void addBid(){
+    public void addBid() {
         numOfBids++;
     }
 }

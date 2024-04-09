@@ -30,12 +30,12 @@ public class AuctionController {
     private AuctionService auctionService;
 
     @PostMapping("/createauction")
-    public ResponseEntity<Auction> createUser(@RequestBody Auction auction, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Integer> createUser(@RequestBody Auction auction, UriComponentsBuilder ucBuilder) {
         log.info("create auction---Controller");
         int auctionID = auctionService.createAuction(auction);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/auction/getauction/{id}").buildAndExpand(auctionID).toUri());
-        return new ResponseEntity<Auction>(headers, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(auctionID);
     }
 
     @GetMapping("/getauction/{auctionID}")
@@ -43,6 +43,7 @@ public class AuctionController {
         Auction getAuction = auctionService.getAuctionById(auctionID);
 
         if (getAuction != null) {
+            log.info("Fetch auction info", getAuction);
             return new ResponseEntity<Auction>(getAuction, HttpStatus.OK);
         } else {
             return new ResponseEntity<Auction>(HttpStatus.NOT_FOUND);
