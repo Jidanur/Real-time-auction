@@ -184,7 +184,10 @@ function Login() {
 
 
           <div style={{ display: 'flex', justifyContent: "center" }}>
-            <Button variant="primary" type="submit" style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
+            <Button 
+            variant="primary"
+             type="submit"
+             style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
               <b>Login</b>
 
             </Button>

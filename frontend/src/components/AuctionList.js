@@ -4,10 +4,11 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 
-
 import { MAX_CHARACTERS } from '../myConfig.js';
+import './css/clickable-card.css';
 
 const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
+const MAX_DESCRIPTION_IN_CARD=MAX_CHARACTERS.MAX_DESCRIPTION_IN_CARD;
 
 
 function AuctionList() {
@@ -69,7 +70,9 @@ function AuctionList() {
           {cardData.map((card, idx) => (
            // console.log("card "+idx+" : +card.auctionTitle);
             <Col key={idx}>
-              <Card 
+              <Card  
+              style={{ width: '18rem' , height:'18rem'}}
+              className="clickable-card" 
           onClick={() => handleCardClick(card.auctionID)}
            >
                 {/* <Card.Img
@@ -79,7 +82,10 @@ function AuctionList() {
                 style={{ maxWidth: '100%', maxHeight: '150px' }}  /> */}
                 <Card.Body>
                   <Card.Title>{card.auctionTitle}</Card.Title>
-                  <Card.Text>{card.auctionDescription}</Card.Text>
+                  <Card.Text>          {card.auctionDescription.length > MAX_DESCRIPTION_IN_CARD // Change 100 to your desired length
+                  ? `${card.auctionDescription.substring(0, MAX_DESCRIPTION_IN_CARD)}...`
+                  : card.auctionDescription}
+              </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
