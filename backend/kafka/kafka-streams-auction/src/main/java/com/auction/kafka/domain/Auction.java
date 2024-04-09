@@ -1,6 +1,8 @@
 package com.auction.kafka.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,6 +29,9 @@ public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int auctionID;
+
+    //@Transient
+    private List<String> recentBids = new ArrayList<>();
 
     @Column(name="sellerID", nullable = false)
     private int sellerID;
@@ -63,7 +68,9 @@ public class Auction {
     @Column(name = "end_time")
     private Timestamp endTime;
 
-    public void addBid(){
+    public void addBid(String currentBid){
         numOfBids++;
+        recentBids.add(currentBid);
     }
+
 }
