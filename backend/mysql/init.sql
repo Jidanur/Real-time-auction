@@ -8,7 +8,7 @@ CREATE TABLE user_table (
 CREATE TABLE auction_table (
     auctionID INTEGER AUTO_INCREMENT PRIMARY KEY,
 	sellerID INTEGER NOT NULL,
-	winnerID INTEGER DEFAULT -1,
+	winnerID INTEGER DEFAULT 0,
     auction_title VARCHAR(200),
     auction_description TEXT,
     imageName VARCHAR(200),
@@ -18,8 +18,7 @@ CREATE TABLE auction_table (
     final_price INTEGER DEFAULT -1,
     start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     end_time TIMESTAMP,
-    FOREIGN KEY (sellerID) REFERENCES user_table(userID),
-    FOREIGN KEY (winnerID) REFERENCES user_table(userID)
+    FOREIGN KEY (sellerID) REFERENCES user_table(userID)
 );
 
 CREATE TABLE image_table (
