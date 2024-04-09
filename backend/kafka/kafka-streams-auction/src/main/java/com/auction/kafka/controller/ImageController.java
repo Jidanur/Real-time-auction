@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.auction.kafka.domain.Image;
+import com.auction.kafka.domain.Response;
 import com.auction.kafka.repository.ImageRepository;
 import com.auction.kafka.util.ImageUtility;
 
@@ -38,7 +39,7 @@ public class ImageController {
         // }
 
         @PostMapping("/upload-images")
-        public ResponseEntity<ImageUploadResponse> uploadImage(@RequestParam("images") List<MultipartFile> files/*
+        public ResponseEntity<Response> uploadImage(@RequestParam("images") List<MultipartFile> files/*
                                                                                                                  * ,@
                                                                                                                  * RequestParam(
                                                                                                                  * "auction")
@@ -59,10 +60,10 @@ public class ImageController {
                         }
 
                         return ResponseEntity.status(HttpStatus.OK)
-                                        .body(new ImageUploadResponse("Images uploaded successfully"));
+                                        .body(new Response("Images uploaded successfully"));
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                        .body(new ImageUploadResponse("Error uploading images: " + e.getMessage()));
+                                        .body(new Response("Error uploading images: " + e.getMessage()));
                 }
         }
 

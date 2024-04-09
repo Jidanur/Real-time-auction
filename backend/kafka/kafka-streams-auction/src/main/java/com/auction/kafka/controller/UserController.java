@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.auction.kafka.domain.Response;
 import com.auction.kafka.domain.User;
 import com.auction.kafka.service.UserService;
 
@@ -30,27 +32,30 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/createuser")
-    public ResponseEntity<User> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Response> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
         log.info("create user---Controller");
         int userID = userService.createUser(user);
         if(userID == -1){
-            return new ResponseEntity<User>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<Response>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        else if(userID == 0){
+            return new ResponseEntity<Response>(new Response("user email already exists"),HttpStatus.FOUND);
         }
         else{
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
-            return new ResponseEntity<User>(headers, HttpStatus.CREATED);
+            return new ResponseEntity<Response>(headers, HttpStatus.CREATED);
         }
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> getUserByID(@RequestBody User user) {
+    public ResponseEntity<Response> userLogin(@RequestBody User user) {
         User getUser = userService.userLogin(user);
         if (getUser != null) {
-            return new ResponseEntity<User>(getUser, HttpStatus.OK);
+            return new ResponseEntity<Response>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Response>(new Response("User does not exists or Password doesn't match the email"), HttpStatus.NOT_FOUND);
         }
 
     }

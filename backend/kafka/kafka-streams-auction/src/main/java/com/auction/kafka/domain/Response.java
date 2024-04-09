@@ -1,14 +1,14 @@
-package com.auction.kafka.controller;
+package com.auction.kafka.domain;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ImageUploadResponse {
+public class Response {
     private String message;
 
-    public ImageUploadResponse(String message) {
+    public Response(String message) {
         this.message = message;
     }
 

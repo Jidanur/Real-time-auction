@@ -38,12 +38,13 @@ public class AuctionService {
         Timestamp auction_end_time = currentAuction.getEndTime();
         int bidPrice = bid.getBidPrice();
         int currentBid = currentAuction.getCurrentBid();
+        int initialPrice = currentAuction.getInitialPrice();
         User bidder = userService.findbyId(bid.getBidderID());
 
-        if(auction_end_time.compareTo(bid_time) >= 0 && bidPrice> currentBid){
+        if(auction_end_time.compareTo(bid_time) >= 0 && bidPrice> currentBid && bidPrice >initialPrice){
+            currentAuction.addBid(""+bidder.getUserName()+ "-" + bidPrice + "-"+ bid_time); // add to bid history only as string to help view in frontend
             currentAuction.setCurrentBid(bidPrice);
             currentAuction.setWinnerID(bid.getBidderID());
-            currentAuction.addBid(""+bidder.getUserName()+"-"+bidPrice);
             auctionDao.UpdateAuctionBid(currentAuction);
         }
 

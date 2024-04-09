@@ -34,6 +34,7 @@ public class UserDao {
         int id = -1;
         User ifExists = findbyEmail(user.getEmail());
         if(ifExists != null){
+            id = 0;
             log.info("user email already exists");
         }
         else{
