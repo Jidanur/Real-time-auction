@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value = "/bid")
 @Slf4j
-// @CrossOrigin()
+@CrossOrigin()
 public class BidController {
 
     @Autowired

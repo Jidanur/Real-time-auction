@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 
 import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 import Theme from './MyTheme';
@@ -21,12 +22,15 @@ function Signup() {
     email: '',
   })
 
+  const navigate=useNavigate();
+
   const [maxReached, setMaxReached] = useState({
     username: false,
     password: false,
     email: false,
   })
   const [validated, setValidated] = useState(false);
+
 
 
   const handleChange = (e) => {
@@ -97,12 +101,18 @@ function Signup() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      else
+      {
 
       //const data = await response.json();
       //console.log('Success:', data);
-      alert("Welome, thanks");
+      alert("Signup suceed. Please login.Thanks");
+      navigate('/login');
+      }
+
+
       // Reset the form or navigate the user to a success page, etc.
-      window.location.href = '/';
+      // window.location.href = '/';
     } catch (error) {
       console.error('There was an error with the form submission:', error);
     }
@@ -168,10 +178,15 @@ function Signup() {
           </Form.Group>
           <div style={{ display: 'flex', justifyContent: "center" }}>
             <Button variant="primary" type="submit" style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
-              <b>Submit</b>
+              <b>Signup</b>
             </Button>
 
           </div>
+
+
+          <div style={{ textAlign: 'center', marginTop: '10px', fontSize:'14px' }}>
+          Already have an account? <Link to="/login">Login here</Link>
+        </div>
         </Form>
       </Container>
   

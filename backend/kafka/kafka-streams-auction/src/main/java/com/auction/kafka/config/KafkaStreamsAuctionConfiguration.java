@@ -19,6 +19,6 @@ public class KafkaStreamsAuctionConfiguration {
 
     @Bean
     public NewTopic topicValidBidRequests() {
-        return TopicBuilder.name(KafkaStreamsAuctionTopology.BID_TOPIC).partitions(4).replicas(1).build();
+        return TopicBuilder.name(KafkaStreamsAuctionTopology.VALID_BID_TOPIC).partitions(4).replicas(1).build();
     }
 }

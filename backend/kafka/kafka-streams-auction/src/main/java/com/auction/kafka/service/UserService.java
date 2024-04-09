@@ -18,6 +18,9 @@ public class UserService {
         return userDao.createUser(user);
     }
 
+    public User userLogin(User user){
+        return userDao.userLogin(user.getEmail(),user.getUserPassword());
+    }
     public User findbyId(int id){
         return userDao.findbyId(id);
     }

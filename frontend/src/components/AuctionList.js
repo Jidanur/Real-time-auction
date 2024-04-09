@@ -2,10 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { useNavigate } from 'react-router-dom';
 
 
-function AuctionList({  }) {
+import { MAX_CHARACTERS } from '../myConfig.js';
+
+const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
+
+
+function AuctionList() {
   const [cardData, setCardData] = useState([]);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -30,6 +37,31 @@ function AuctionList({  }) {
     preLoad();
   }, []); // Empty dependency array ensures that this effect runs only once after the component mounts
 
+  const [showAlert, setShowAlert] = useState(true);
+
+  const handleCardClick=(auctionID)=>{
+   console.log("the id shoudl be : " +auctionID);
+    //window.location.href= move to the page that laod the auction view
+
+
+    // const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
+    // const handleAlertClose = () => {
+    //   setShowAlert(false); // Hide the alert
+    //   navigate('/login');
+    // };
+    
+    // if (!isAuthenticated && showAlert) {
+    //   // If user is not authenticated and the alert is shown, display the alert
+    //   return (
+    //     <div>
+    //       <h1 style={{ fontSize: '24px', color: 'red' }}>You need to login to access this page.</h1>
+    //       <button onClick={() => handleAlertClose()}>Close</button>
+    //     </div>
+    //   );
+    // }
+
+    navigate(`/auction/${auctionID}`); 
+  }
 
     return (
         <Row xs={1} md={2} lg={4} className="g-4"  >
@@ -37,7 +69,9 @@ function AuctionList({  }) {
           {cardData.map((card, idx) => (
            // console.log("card "+idx+" : +card.auctionTitle);
             <Col key={idx}>
-              <Card>
+              <Card 
+          onClick={() => handleCardClick(card.auctionID)}
+           >
                 {/* <Card.Img
                  variant="top" 
                  //src={card.auction} 
