@@ -11,6 +11,7 @@ const Theme = createTheme({
       'light_orange': '#f4af36',
       'white': '#ffffff',
       'dark_orange': '#db9d52',
+      'light_red':'#ff5656',
     },
     secondary: {
       'main':'#db9c4e',

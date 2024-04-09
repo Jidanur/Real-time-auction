@@ -27,7 +27,7 @@ const NavBar = () => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h8" component="div" sx={{ flexGrow: 1 }}>
-            Auction
+            Real time Auction
           </Typography>
           <StyledInputBase
             placeholder="Search..."
@@ -43,8 +43,8 @@ const NavBar = () => {
 
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/about">About us</Button>
-          <Button color="inherit" component={Link} to="/contact">Account</Button>
+         {/* <Button color="inherit" component={Link} to="/about">About us</Button> */}
+          <Button color="inherit" component={Link} to="/account">Account</Button>
 
         </div>
 

@@ -69,10 +69,6 @@ export const CreateAuction = () => {
     }
 
     let currentDate = `${year}-${month}-${day}`;
-    // if (!start && formAuction.startDate > currentDate)
-    //   currentDate = formAuction.startDate
-
-
     return currentDate;
   };
 
@@ -98,35 +94,9 @@ export const CreateAuction = () => {
     if (minutes < 10) {
       minutes = '0' + minutes;
     }
-    // if (seconds < 10) {
-    //   seconds = '0' + seconds;
-    // }
-
-    // console.log("Current before: ");
-    // console.log(`${year}-${month}-${day}T${hours}:${minutes}:${seconds}`);
-    // console.log("Start date " + formAuction.startDate);
-    // console.log("comaprision equal? ");
-    // console.log(formAuction.startDate === getCurrentDate(true));
 
 
     let currentDateTime = `${hours}:${minutes}`;
-    // if ((start & formAuction.startDate === getCurrentDate(true)) || (!start && formAuction.endDate === getCurrentDate(false))) {
-    //   currentDateTime = `${hours}:${minutes}:${seconds}`;
-    //   console.log("Its today");
-    // }
-
-    // else if ((start && formAuction.startDate > getCurrentDate(true)) || (!start && formAuction.endDate > getCurrentDate(false))) {
-    //   currentDateTime = `00:00:00`;
-    //   console.log("bigger than today");
-    // }
-    // if (!start && formAuction.startDate===formAuction.endDate)
-    // {
-    //   currentDateTime=formAuction.startTime
-    //   console.log("it's end time")
-    // }
-
-    // console.log("Current:" + currentDateTime);
-    // console.log("User " + formAuction.startDate + " " + formAuction.startTime + " -> " + formAuction.endDate + " " + formAuction.endTime);
 
     return currentDateTime;
   };
@@ -143,13 +113,24 @@ export const CreateAuction = () => {
     startTime: true,
     endDate: true,
     endTime: true,
-
-
   });
 
+  const [imageOnly, setImageOnly]=useState(true)
+
   const handleFileChange = (event) => {
+    setImageOnly(true);
     const files = Array.from(event.target.files); // Convert FileList to array
-    setFormAuction({ ...formAuction, images: files }); // Update images state with selected files
+    const areAllImages = files.every(file => file.type.startsWith('image/'));
+    if (!areAllImages) {
+      // If any file is not an image, give a warning
+     // alert('You can only upload image files.');
+     setImageOnly(false);
+      //return;
+    }
+    else{
+
+    setFormAuction({ ...formAuction, images: files }); 
+    }// Update images state with selected files
   };
 
   const handleChange = (event) => {
@@ -162,16 +143,8 @@ export const CreateAuction = () => {
       date: MAX_DATE,
       description: MAX_DESCRIPTION // Adjust as needed
     };
-
     event.target.maxLength = maxLengths[name];
 
-    // if (name==='images')
-    // {
-    //  console.log("just save images in  the form");
-    //  console.log(value);
-    // }
-
-    // Update the form data with the truncated value
     setFormAuction({
       ...formAuction,
       [name]: value//truncatedValue
@@ -262,14 +235,9 @@ export const CreateAuction = () => {
           endTime: false,
         });
       }
-
-
-
-
-
     }
     else if (name === 'endTime') {
-      if (formAuction.startDate === formAuction.endDate && formAuction.startTime >= formAuction.endTime) {
+      if (formAuction.startDate === formAuction.endDate && formAuction.startTime >= value) {
         setValidated({
           startDate: true,
           startTime: true,
@@ -513,9 +481,11 @@ export const CreateAuction = () => {
               name='images'
               required
               //  value={formAuction.images}
+
               onChange={handleFileChange}
             />
           </Form.Group>
+          {!imageOnly && <small className="text-danger">Only image files are allowed (.png, .jpeg, .jpg)</small>}
           <Form.Control.Feedback type="invalid">
             Please provide some pictures of the item.
           </Form.Control.Feedback>

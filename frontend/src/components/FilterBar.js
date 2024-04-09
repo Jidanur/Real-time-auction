@@ -1,6 +1,5 @@
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 
 import Theme from './MyTheme';
@@ -18,7 +17,7 @@ const FilterBar = () => {
   const navigate = useNavigate();
 
   const handleCreateAuction = () => {
-console.log("button was cliked.");
+    console.log("button was cliked.");
     const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
     if (!isAuthenticated) {
       // If user is not authenticated, show an alert and then redirect to login page
@@ -26,11 +25,10 @@ console.log("button was cliked.");
       navigate('/login');
       //return null;
     }
-else
-{
-  console.log("user is logged in already")
-   navigate(`/create-auction`);
-}
+    else {
+      console.log("user is logged in already")
+      navigate(`/create-auction`);
+    }
   }
 
 
@@ -38,14 +36,15 @@ else
     <div style={{ width: '200px', height: '100vh', backgroundColor: Theme.palette.primary.white, padding: '10px', position: 'fixed', left: 0, top: '80px' }}>
       <Button
         variant="primary"
-        style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', textTransform: 'none', marginLeft: '0px', marginTop: '5px', padding: '10px', background: Theme.palette.secondary.light_green }}
-       // component={Link}
-        //       to="/create-auction"
+        style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
+         textTransform: 'none', marginLeft: '0px', marginTop: '5px',
+          padding: '10px', background: Theme.palette.secondary.light_green }}
         onClick={handleCreateAuction}
       >
         <b>Create An Auction</b>
-      </Button>{' '}
-      <div
+      </Button>
+
+      {/* <div
         style={{ backgroundColor: Theme.palette.primary.red, padding: '10px', position: 'fixed', left: 0, top: '150px' }}>
         <div>
           <h5
@@ -62,7 +61,7 @@ else
           </div>
         </Form>
 
-      </div>
+      </div> */}
     </div>
 
   );

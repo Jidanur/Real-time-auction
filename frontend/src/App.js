@@ -6,6 +6,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 
 
+import Account from './components/Account';
 import BidderViewAuction from './components/BidAuction';
 import CreateAuction from './components/CreateAuction';
 import Login from './components/Login';
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/account" element={<Account/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/create-auction" element={<CreateAuction/>} />
         <Route path="/auction/:auctionID" element={<BidderViewAuction/>} />
