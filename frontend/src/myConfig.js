@@ -11,6 +11,7 @@ export const MAX_CHARACTERS =
     MIN_YEAR: 1900,
 
     COOKIE_USER_ID_KEY:"auction-userID",
+    MAX_DESCRIPTION_IN_CARD:150,
 
 }
 

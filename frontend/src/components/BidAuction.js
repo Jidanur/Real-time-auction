@@ -44,12 +44,21 @@ function BidderViewAuction( ) {
  } );
  const [timeLeft, setTimeLeft] = useState('');
 
+
     
     const [formBid, setFormBid] = useState({
         bid_price:'',
         auction_id:'',
         date_time:'',
     });
+
+    const list = [
+        { date: 'Mar 27, 2024 (12:25 AM)', name: 'Luis', amount: 25 },
+        { date: 'Mar 27, 2024 (12:19 AM)', name: 'Ivy', amount: 20 },
+        { date: 'Mar 27, 2024 (12:19 AM)', name: 'Ivy', amount: 11 },
+        
+        // Add more items as needed
+      ];
 
 
     const splitDateTime=(dateTimeString) =>{
@@ -116,7 +125,7 @@ function BidderViewAuction( ) {
                     endDate: endDate,
                     endTime: endTime,
 
-                    currentPrice:-1,
+                    currentPrice:data.currentBid===0?data.initialPrice:data.currentBid,
                     
                 });
                 
@@ -133,8 +142,6 @@ function BidderViewAuction( ) {
     const endDate= auctionData.endDate;
     const endTime= auctionData.endTime;
 
-
-    // useEffect(() => {
     //     const calculateTimeLeft = () => {
     //         const now = new Date();
     //         const endDateTime = new Date(`${endDate} ${endTime}`);
@@ -158,7 +165,23 @@ function BidderViewAuction( ) {
 
     // }, [endDate, endTime]);
 
+    const handleSubmitBid = (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+      
+        if (!form.checkValidity()) {
+          event.stopPropagation();
+        } else {
+          // window.location.href = '/';
+          postSubmitBid(formBid.bid_price);
+         // setValidated(true);
+      
+        }
+      }
+
+
     const navigate=useNavigate();
+    
     const postSubmitBid = async (bid) => {
         console.log("Submit a bid");
         console.log("button was cliked.");
@@ -193,12 +216,12 @@ function BidderViewAuction( ) {
             }
             else{
 
-            const data = await response.json();
-            console.log('Success:', data);
+
+            //const data = await response.json();
+            //console.log('Success:', data);
             alert("Bid submitted, thanks");
             
-            //window.location.assign("/");
-           // window.location.href = '/';
+
             }
 
             // Reset the form or navigate the user to a success page, etc.
@@ -208,7 +231,7 @@ function BidderViewAuction( ) {
     }
     };
 
-    // submitBid()
+
 
     if (!auctionData) {
         return <div>Get some drink, I am still loading...</div>;
@@ -222,7 +245,7 @@ function BidderViewAuction( ) {
             <Row>
                 <Col>
                     <Container style={{ marginTop: '20px', marginLeft: '20px' }}>
-                        <Form>
+                        <Form onSubmit={handleSubmitBid}>
                             <Typography variant="h4" gutterBottom>
                                 {auctionData.title}
                             </Typography>
@@ -305,6 +328,7 @@ function BidderViewAuction( ) {
 
                                 <InputGroup.Text>$</InputGroup.Text>
                                 <Form.Control
+                                required
                                     type="number"
                                     placeholder='Your bid'
                                     step="1"
@@ -315,13 +339,14 @@ function BidderViewAuction( ) {
                             </InputGroup>
                             <div style={{ display: 'flex', justifyContent: "center" }}>
                                 <Button variant="primary" type="submit"
+
                                     style={{
                                         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
                                         color: 'black', display: 'flex',
                                         backgroundColor: Theme.palette.secondary.light_green
                                     }}
                                     value={formBid.bid_price}
-                                    onClick={() => postSubmitBid(formBid.bid_price)}
+                                    //onClick={() => handleSubmitBid()}
                                 >
                                     <b>Confirm</b>
                                 </Button>
@@ -390,28 +415,18 @@ function BidderViewAuction( ) {
                     <br>
 
                     </br>
-                    <h5>Top 10 recent bids:</h5>
-
-                    <ListGroup >
+                    <h5>Top {list.length} recent bids:</h5>
+                    <ListGroup>
                         <Container style={{ backgroundColor: Theme.palette.primary.light_orange }}>
-                            <ListGroup.Item>
-                                <Row >
-                                    <Col>Mar 27, 2024 (12:25 AM) </Col>
-                                    <Col> Luis</Col>
-                                    <Col>$
-                                        25
-                                    </Col>
-                                </Row>
+                        {list.map((item, index) => (
+                            <ListGroup.Item key={index}>
+                            <Row>
+                                <Col>{item.date}</Col>
+                                <Col>{item.name}</Col>
+                                <Col>${item.amount}</Col>
+                            </Row>
                             </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row >
-                                    <Col>Mar 27, 2024 (12:19 AM) </Col>
-                                    <Col> Ivy</Col>
-                                    <Col>$
-                                        20
-                                    </Col>
-                                </Row>
-                            </ListGroup.Item>
+                        ))}
                         </Container>
                     </ListGroup>
 
