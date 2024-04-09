@@ -26,5 +26,8 @@ CREATE TABLE image_table (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(1000),
     type VARCHAR(1000),
-    image LONGBLOB NOT NULL
+    image LONGBLOB NOT NULL,
+    auctionID INTEGER NOT NULL,
+    FOREIGN KEY (auctionID) REFERENCES auction_table(auctionID)
+
 );

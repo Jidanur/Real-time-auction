@@ -1,4 +1,3 @@
-import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
@@ -27,9 +26,11 @@ const NavBar = () => {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h8" component="div" sx={{ flexGrow: 1 }}>
-            Auction
+            Real time Auction
           </Typography>
-          <StyledInputBase
+
+          {/* Seacrch Bar */}
+          {/* <StyledInputBase
             placeholder="Search..."
 
             inputProps={{ 'aria-label': 'search' }}
@@ -37,14 +38,14 @@ const NavBar = () => {
           />
           <Button color="inherit" component={Link} to="/search">
             <SearchIcon />
-          </Button>
+          </Button> */}
         </div>
 
 
         <div>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/about">About us</Button>
-          <Button color="inherit" component={Link} to="/contact">Account</Button>
+         {/* <Button color="inherit" component={Link} to="/about">About us</Button> */}
+          <Button color="inherit" component={Link} to="/account">Account</Button>
 
         </div>
 
