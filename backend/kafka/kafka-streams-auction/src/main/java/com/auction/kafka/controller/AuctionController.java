@@ -33,16 +33,15 @@ public class AuctionController {
     public ResponseEntity<Response> createUser(@RequestBody Auction auction, UriComponentsBuilder ucBuilder) {
         log.info("create auction---Controller");
         int auctionID = auctionService.createAuction(auction);
-        if(auctionID == 0){
-            return new ResponseEntity<Response>(new Response("StartTime should be greater than endTime"), HttpStatus.BAD_REQUEST);
-        }
-        else if(auctionID == -1){
+        if (auctionID == 0) {
+            return new ResponseEntity<Response>(new Response("StartTime should be greater than endTime"),
+                    HttpStatus.BAD_REQUEST);
+        } else if (auctionID == -1) {
             return new ResponseEntity<Response>(new Response("Seller does not exists"), HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<Response>(new Response("" + auctionID), HttpStatus.CREATED);
         }
-        else{
-            return new ResponseEntity<Response>(new Response("'auctionID':"+auctionID), HttpStatus.CREATED);
-        }
-        
+
     }
 
     @GetMapping("/getauction/{auctionID}")
@@ -89,7 +88,5 @@ public class AuctionController {
             return new ResponseEntity<List<Auction>>(HttpStatus.NO_CONTENT);
         }
     }
-
-
 
 }

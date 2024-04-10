@@ -33,16 +33,14 @@ public class UserController {
     public ResponseEntity<Response> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
         log.info("create user---Controller");
         int userID = userService.createUser(user);
-        if(userID == -1){
+        if (userID == -1) {
             return new ResponseEntity<Response>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else if(userID == 0){
-            return new ResponseEntity<Response>(new Response("user email already exists"),HttpStatus.FOUND);
-        }
-        else{
+        } else if (userID == 0) {
+            return new ResponseEntity<Response>(new Response("user email already exists"), HttpStatus.FOUND);
+        } else {
             // HttpHeaders headers = new HttpHeaders();
             // headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
-            return new ResponseEntity<Response>(new Response("user created with UserID-"+ userID), HttpStatus.CREATED);
+            return new ResponseEntity<Response>(new Response("user created with UserID-" + userID), HttpStatus.CREATED);
         }
 
     }
@@ -51,9 +49,10 @@ public class UserController {
     public ResponseEntity<Response> userLogin(@RequestBody User user) {
         User getUser = userService.userLogin(user);
         if (getUser != null) {
-            return new ResponseEntity<Response>(new Response("'userID':"+getUser.getUserID()),HttpStatus.OK);
+            return new ResponseEntity<Response>(new Response("" + getUser.getUserID()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<Response>(new Response("User does not exists or Password doesn't match the email"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Response>(
+                    new Response("User does not exists or Password doesn't match the email"), HttpStatus.NOT_FOUND);
         }
 
     }
