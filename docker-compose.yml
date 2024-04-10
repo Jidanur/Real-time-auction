@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181"
+    networks:
+      - kafkanet
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    networks:
+      - kafkanet
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_BROKER_ID=0
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT  
+      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,EXTERNAL://:29092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://:9092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+  db:
+    image: mysql:latest
+    restart: always
+    networks:
+      - kafkanet
+    environment:
+      - MYSQL_ROOT_PASSWORD=4300
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_DATABASE=auction_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - .backend/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  spring-auction-backend:
+    image: spring-auction-backend:latest
+    restart: always
+    networks:
+      - kafkanet
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+      - db
+
+networks:
+  kafkanet:
+    name: kafka-network
+  
+
