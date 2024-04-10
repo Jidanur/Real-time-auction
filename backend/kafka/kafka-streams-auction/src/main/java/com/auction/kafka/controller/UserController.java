@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<Response> userLogin(@RequestBody User user) {
         User getUser = userService.userLogin(user);
         if (getUser != null) {
-            return new ResponseEntity<Response>(HttpStatus.OK);
+            return new ResponseEntity<Response>(new Response("'userID':"+getUser.getUserID()),HttpStatus.OK);
         } else {
             return new ResponseEntity<Response>(new Response("User does not exists or Password doesn't match the email"), HttpStatus.NOT_FOUND);
         }

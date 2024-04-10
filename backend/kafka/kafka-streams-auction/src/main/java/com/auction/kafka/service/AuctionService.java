@@ -32,6 +32,14 @@ public class AuctionService {
         return auctionDao.getAuctionsList();
     }
 
+    public List<Auction> getMostBidsAuctions(){
+        return auctionDao.getMostBidsAuctions();
+    }
+
+    public List<Auction> getHighestBidAuction(){
+        return auctionDao.getHighestBidAuctions();
+    }
+
     public void placeBid_auction(BidRequest bid){
         Auction currentAuction = getAuctionById(bid.getAuctionID());
         Timestamp bid_time = bid.getTimeOfBid();
@@ -42,7 +50,7 @@ public class AuctionService {
         User bidder = userService.findbyId(bid.getBidderID());
 
         if(auction_end_time.compareTo(bid_time) >= 0 && bidPrice> currentBid && bidPrice >initialPrice){
-            currentAuction.addBid(""+bidder.getUserName()+ "-" + bidPrice + "-"+ bid_time); // add to bid history only as string to help view in frontend
+            currentAuction.addBid(""+bidder.getUserID()+ "," + bidPrice + ","+ bid_time.getTime()); // add to bid history only as string to help view in frontend
             currentAuction.setCurrentBid(bidPrice);
             currentAuction.setWinnerID(bid.getBidderID());
             auctionDao.UpdateAuctionBid(currentAuction);

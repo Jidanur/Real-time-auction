@@ -30,6 +30,21 @@ public class BidRequest {
 
     }
 
+    public BidRequest(int bidderID, int auctionID,int bidPrice,Timestamp timeOfBid){
+        this.bidderID = bidderID;
+        this.auctionID = auctionID;
+        this.bidPrice = bidPrice;
+        this.timeOfBid = timeOfBid;
+    }
+
+    public Boolean isEqual(BidRequest bidRequest){
+        Boolean isEqual = false;
+        if( timeOfBid.compareTo(bidRequest.getTimeOfBid()) == 0 && bidPrice == bidRequest.getBidPrice()){
+            isEqual = true;
+        }
+        return isEqual;
+    }
+
     public String toString(){
         String ret = "bidderId:" + this.bidderID + ", auctionID:" + this.auctionID + ", bid:$"+this.bidPrice+ ", time:"+ this.timeOfBid;
         return ret;

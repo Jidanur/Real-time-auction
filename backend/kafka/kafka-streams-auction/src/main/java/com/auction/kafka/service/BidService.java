@@ -35,6 +35,19 @@ public class BidService {
         kafkaTemplate.send(KafkaStreamsAuctionTopology.BID_TOPIC,String.valueOf(bid.getAuctionID()),bid);
     }
 
+    public BidRequest getLastBid(int auctionID){
+        BidRequest lastBidRequest = new BidRequest();
+        Auction curr = auctionService.getAuctionById(auctionID);
+        if(curr != null){
+            String lastBid = curr.getLastBid();
+            if(!lastBid.isEmpty()){
+                String[] seperate = lastBid.split(",");
+                lastBidRequest = new BidRequest(Integer.parseInt(seperate[0]),auctionID,Integer.parseInt(seperate[1]),new Timestamp(Long.parseLong(seperate[2])));
+            }
+        }
+        return lastBidRequest;
+    }
+
     public Boolean validateBid(BidRequest bid){
         Boolean valid = false;
 

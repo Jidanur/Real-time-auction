@@ -79,6 +79,27 @@ public class AuctionDao {
         return (resultList!=null && resultList.size()>0)?resultList:null;
     }
 
+    public List<Auction> getMostBidsAuctions(){
+        CriteriaBuilder cb = getSession().getCriteriaBuilder();
+        CriteriaQuery<Auction> criteriaQuery = cb.createQuery(Auction.class);
+        Root<Auction> root = criteriaQuery.from(Auction.class);
+        criteriaQuery.orderBy(cb.desc(root.get("numOfBids")));
+        
+        List<Auction> resultList = getSession().createQuery(criteriaQuery).getResultList();
+        return (resultList!=null && resultList.size()>0)?resultList:null;
+    }
+
+    public List<Auction> getHighestBidAuctions(){
+        CriteriaBuilder cb = getSession().getCriteriaBuilder();
+        CriteriaQuery<Auction> criteriaQuery = cb.createQuery(Auction.class);
+        Root<Auction> root = criteriaQuery.from(Auction.class);
+        criteriaQuery.orderBy(cb.desc(root.get("currentBid")));
+        
+        List<Auction> resultList = getSession().createQuery(criteriaQuery).getResultList();
+        return (resultList!=null && resultList.size()>0)?resultList:null;
+    }
+
+
     //@Caching(evict = {@CacheEvict(value = "com.auction.kafka.domain.Auction", key = "#auction.getAuctionID()")}, put={@org.springframework.cache.annotation.CachePut(value = "com.auction.kafka.domain.Auction", key = "#auction.getAuctionID()")})
     public Auction UpdateAuctionBid(Auction auction){
         CriteriaBuilder cb = getSession().getCriteriaBuilder();

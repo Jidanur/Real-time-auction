@@ -40,7 +40,7 @@ public class AuctionController {
             return new ResponseEntity<Response>(new Response("Seller does not exists"), HttpStatus.BAD_REQUEST);
         }
         else{
-            return new ResponseEntity<Response>(new Response("Created new Auction with ID-"+auctionID), HttpStatus.CREATED);
+            return new ResponseEntity<Response>(new Response("'auctionID':"+auctionID), HttpStatus.CREATED);
         }
         
     }
@@ -67,5 +67,29 @@ public class AuctionController {
             return new ResponseEntity<List<Auction>>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @GetMapping("/all/mostbids")
+    public ResponseEntity<List<Auction>> getMostBids() {
+        List<Auction> allusers = auctionService.getMostBidsAuctions();
+
+        if (allusers != null) {
+            return new ResponseEntity<List<Auction>>(allusers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<List<Auction>>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/all/highbid")
+    public ResponseEntity<List<Auction>> getHighestBidAuction() {
+        List<Auction> allusers = auctionService.getHighestBidAuction();
+
+        if (allusers != null) {
+            return new ResponseEntity<List<Auction>>(allusers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<List<Auction>>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+
 
 }

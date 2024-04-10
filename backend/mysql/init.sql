@@ -12,6 +12,7 @@ CREATE TABLE auction_table (
     auction_title VARCHAR(200),
     auction_description TEXT,
     imageName VARCHAR(200),
+    lastBid VARCHAR(200),
 	numOfBids INTEGER DEFAULT 0,
     initial_price INTEGER,
     current_bid INTEGER DEFAULT 0,

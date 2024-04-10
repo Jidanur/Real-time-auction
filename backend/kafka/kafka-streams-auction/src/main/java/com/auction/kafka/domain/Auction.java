@@ -1,9 +1,7 @@
 package com.auction.kafka.domain;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,7 +30,8 @@ public class Auction {
     private int auctionID;
 
     //@Transient
-    private List<String> recentBids = new ArrayList<>();
+    @Column(name ="lastBid")
+    private String lastBid;
 
     @Column(name="sellerID", nullable = false)
     private int sellerID;
@@ -71,7 +70,7 @@ public class Auction {
 
     public void addBid(String currentBid){
         numOfBids++;
-        recentBids.add(currentBid);
+        lastBid = currentBid;
     }
 
     public void setDefaultValues(){
