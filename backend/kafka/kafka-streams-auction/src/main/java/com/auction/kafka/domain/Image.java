@@ -34,12 +34,12 @@ public class Image {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "image", unique = false, nullable = false, length = 100000)
+    @Column(name = "image", unique = false, nullable = false, length = 1000000)
     private byte[] image;
 
     // @ManyToOne
     // @JoinColumn(name = "auctionID", referencedColumnName = "auctionID")
-    @Column(name = "auctionID", nullable = false, columnDefinition = "DEFAULT -1")
+    @Column(name = "auctionID", nullable = false/* , columnDefinition = "DEFAULT -1" */)
     private int auctionID;
 
 }

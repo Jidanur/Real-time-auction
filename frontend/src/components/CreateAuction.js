@@ -337,18 +337,23 @@ export const CreateAuction = () => {
           }),
         });
 
-        if (!responseAuction.ok) {
-          throw new Error(`HTTP error! status: ${responseAuction.status}`);
-        }
-        else {
+        if (responseAuction.status===201) {
 
           const data = await responseAuction.json();
-          console.log('Added auction nSuccess:', data);
-          auction_id = data;
+          console.log('Added auction nSuccess:',responseAuction.message);
+          auction_id = parseInt(data.message, 10)//data;
+          console.log("auctionid is ", auction_id);
           //alert("Auction added, thanks");
+          //navigate("/");
           //window.location.assign("/");
           // window.location.href = '/';
         }
+
+        else{
+          alert(responseAuction.body);
+          throw new Error(`HTTP error! status: ${responseAuction.status}`);
+        }
+        
 
         // Reset the form or navigate the user to a success page, etc.
       } catch (error) {

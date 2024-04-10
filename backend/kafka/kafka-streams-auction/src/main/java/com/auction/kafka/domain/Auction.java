@@ -37,7 +37,7 @@ public class Auction {
     @Column(name = "sellerID", nullable = false)
     private int sellerID;
 
-    @Column(name = "winnerID", columnDefinition = "DEFAULT 0")
+    @Column(name = "winnerID"/* , columnDefinition = "DEFAULT 0" */)
     private int winnerID;
 
     @Column(name = "auction_title", length = 200)
@@ -75,18 +75,21 @@ public class Auction {
     }
 
     public void setDefaultValues() {
-        currentBid = 0;
-        numOfBids = 0;
-        winnerID = 0;
+        // currentBid = 0;
+        // numOfBids = 0;
+        // winnerID = 0;
 
         if (auctionDescription == null) {
             auctionDescription = "";
         }
         if (finalPrice == null) {
-            finalPrice = Integer.MAX_VALUE;
+            finalPrice = initialPrice;
         }
         if (imageName == null) {
             imageName = "";
+        }
+        if (currentBid == null) {
+            currentBid = initialPrice;
         }
     }
 

@@ -8,7 +8,8 @@ CREATE TABLE user_table (
 CREATE TABLE auction_table (
     auctionID INTEGER AUTO_INCREMENT PRIMARY KEY,
 	sellerID INTEGER NOT NULL,
-	winnerID INTEGER DEFAULT 0,
+	-- winnerID INTEGER DEFAULT 0,
+    winnerID INTEGER ,
     auction_title VARCHAR(200),
     auction_description TEXT,
     imageName VARCHAR(200),

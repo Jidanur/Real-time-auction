@@ -159,8 +159,8 @@ function BidderViewAuction() {
     
 
 
-
-                    const responseImages = await fetch(`http://127.0.0.1:8080/auction/get-images/${auctionID}`, {
+console.log("auctionID ", data.auctionID);
+                    const responseImages = await fetch(`http://127.0.0.1:8080/auction/get-images/${data.auctionID}`, {
                         method: 'GET',
                     });
     
@@ -191,7 +191,7 @@ function BidderViewAuction() {
                         endDate: endDate,
                         endTime: endTime,
 
-                        currentPrice: data.currentBid === 0 ? data.initialPrice : data.currentBid,
+                        currentPrice: data.currentBid==null || data.currentBid === 0 ? data.initialPrice : data.currentBid,
 
                     });
 

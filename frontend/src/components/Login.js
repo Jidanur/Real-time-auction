@@ -15,7 +15,7 @@ import { MAX_CHARACTERS } from '../myConfig.js';
 const MAX_USERNAME = MAX_CHARACTERS.MAX_USERNAME
 const MAX_PASSWORD = MAX_CHARACTERS.MAX_PASSWORD
 const MAX_EMAIL = MAX_CHARACTERS.MAX_EMAIL
-const COOKIE_USER_ID_KEY=MAX_CHARACTERS.COOKIE_USER_ID_KEY;
+const COOKIE_USER_ID_KEY = MAX_CHARACTERS.COOKIE_USER_ID_KEY;
 
 
 
@@ -48,7 +48,7 @@ function Login() {
     const max_lengths = {
       username: MAX_USERNAME,
       password: MAX_PASSWORD,
-       email: MAX_EMAIL
+      email: MAX_EMAIL
     }
     e.target.max_length = max_lengths[name];
 
@@ -74,23 +74,23 @@ function Login() {
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-  
+
     // if (!isEmailDomainValid) {
     //   alert("Please use a valid @myumanitoba.ca or @umanitoba.ca email address.");
     //   return;
     // }
-  
+
     if (!form.checkValidity()) {
       event.stopPropagation();
     } else {
       // window.location.href = '/';
       postLogin();
-     // setValidated(true);
-  
+      // setValidated(true);
+
     }
   }
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const postLogin = async () => {
     try {
@@ -103,32 +103,35 @@ function Login() {
         },
         body: JSON.stringify({
           //userName: formLogin.username,
-            email: formLogin.email,
+          email: formLogin.email,
           userPassword: formLogin.password
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      else{
+      if (response.status === 200) {
 
-        try{
-            const data = await response.json();
-            console.log('Login Success:', data);
-            var userID=data['userID'];
+        try {
+          const data = await response.json();
+          console.log('Login Success:', response.message);
+          var userID = parseInt(data.message, 10);//.//data['userID'];
 
-            console.log("userID is "+userID);
 
-            const expirationTime = new Date(new Date().getTime() + 6000000);
-            Cookies.set(COOKIE_USER_ID_KEY, JSON.stringify(userID), { expires: expirationTime });
-            console.log("cookie set");
-            navigate('/');
+          console.log("userID is " + userID);
+
+          const expirationTime = new Date(new Date().getTime() + 6000000);
+          Cookies.set(COOKIE_USER_ID_KEY, JSON.stringify(userID), { expires: expirationTime });
+          console.log("cookie set");
+          navigate('/');
         }
-        catch(error)
-        {
+        catch (error) {
           console.log("There was an error with getting the login response ", error);
         }
+      }
+      
+      else {
+        alert("Email or Password does not match. Or User does not exist.");
+        console.log("Response is ",response);
+        throw new Error(`HTTP error! status: ${response.status}: ${response.message}`);
       }
 
 
@@ -184,10 +187,10 @@ function Login() {
 
 
           <div style={{ display: 'flex', justifyContent: "center" }}>
-            <Button 
-            variant="primary"
-             type="submit"
-             style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ color: 'black', boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', backgroundColor: Theme.palette.secondary.light_green }} >
               <b>Login</b>
 
             </Button>
@@ -195,10 +198,10 @@ function Login() {
           </div>
 
 
-        {/* Add the script for sign up prompt */}
-        <div style={{ textAlign: 'center', marginTop: '10px', fontSize:'14px' }}>
-          Don't have an account? <Link to="/signup">Signup here</Link>
-        </div>
+          {/* Add the script for sign up prompt */}
+          <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '14px' }}>
+            Don't have an account? <Link to="/signup">Signup here</Link>
+          </div>
         </Form>
       </Container>
     </div>
