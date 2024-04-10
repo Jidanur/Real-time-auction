@@ -6,6 +6,7 @@ Welcome to our Real-Time Auction Web App, a dynamic platform that brings auction
 - [Building and running](#building-and-running-the-project)
 - [Architecture](#architecture)
 
+# Video demo: 
 
 #  Motivation
    Conventional auction systems face limitations in real-time functionality and encounter scalability and performance issues, particularly during peak traffic. To solve this, our objective is to create a real-time auction application utilizing Kafka, Spring Boot microservices. 
@@ -39,6 +40,14 @@ Getting started with this project is a breeze, thanks to its Docker-based setup.
     
     REST API is documented here - [REST API](/backend/restAPI.md)
 
+5. Running the frontend:
+   ```
+   cd frontend
+   npm i
+   npm start
+   ```
+   The web app is on http://localhost:3000/
 
+   Please make sure you clear all your cookie before lanching, the web app will check for your cookie with the "auction-userID" key to check to see if you are logged in or not to proceed. Thanks!
 # Architecture
    ![Real-Time Auction Architecture](architecture.PNG)
