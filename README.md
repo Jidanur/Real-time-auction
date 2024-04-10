@@ -38,7 +38,13 @@ Getting started with this project is a breeze, thanks to its Docker-based setup.
     By default, the Spring backend runs on `localhost:8080` You can test the backend functionality by accessing this URL in your web browser or using API testing tools.
     
     REST API is documented here - [REST API](/backend/restAPI.md)
-
+5. Running the frontend:
+   ```
+   cd frontend
+   npm i
+   npm start
+   ```
+   The web app is on http://localhost:3000/
 
 # Architecture
    ![Real-Time Auction Architecture](architecture.PNG)
