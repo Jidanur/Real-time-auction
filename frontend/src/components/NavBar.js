@@ -1,4 +1,3 @@
-import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
@@ -29,7 +28,9 @@ const NavBar = () => {
           <Typography variant="h8" component="div" sx={{ flexGrow: 1 }}>
             Real time Auction
           </Typography>
-          <StyledInputBase
+
+          {/* Seacrch Bar */}
+          {/* <StyledInputBase
             placeholder="Search..."
 
             inputProps={{ 'aria-label': 'search' }}
@@ -37,7 +38,7 @@ const NavBar = () => {
           />
           <Button color="inherit" component={Link} to="/search">
             <SearchIcon />
-          </Button>
+          </Button> */}
         </div>
 
 
