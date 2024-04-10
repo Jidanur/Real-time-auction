@@ -25,4 +25,4 @@ Getting started with this project is a breeze, thanks to its Docker-based setup.
 - Ubuntu
 
 # Architecture
-   ![Real-Time Auction Architecture](architecture.png)
+   ![Real-Time Auction Architecture](architecture.PNG)
