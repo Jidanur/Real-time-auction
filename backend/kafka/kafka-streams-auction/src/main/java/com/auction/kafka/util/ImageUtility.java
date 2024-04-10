@@ -1,4 +1,3 @@
-
 package com.auction.kafka.util;
 
 import java.io.ByteArrayOutputStream;

@@ -44,12 +44,18 @@ public class BidService {
         }
         else{
             String lastBid = curr.getLastBid();
-            if(!lastBid.isEmpty()){
-                String[] seperate = lastBid.split(",");
-                lastBidRequest.setBidderID(Integer.parseInt(seperate[0]));
-                lastBidRequest.setBidPrice(Integer.parseInt(seperate[1]));
-                lastBidRequest.setTimeOfBid(new Timestamp(Long.parseLong(seperate[2])));
+            if(lastBid == null){
+                return null;
             }
+            else{
+                if (!lastBid.isEmpty()){
+                    String[] seperate = lastBid.split(",");
+                    lastBidRequest.setBidderID(Integer.parseInt(seperate[0]));
+                    lastBidRequest.setBidPrice(Integer.parseInt(seperate[1]));
+                    lastBidRequest.setTimeOfBid(new Timestamp(Long.parseLong(seperate[2])));
+                }
+            }
+            
         }
         return lastBidRequest;
     }

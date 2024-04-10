@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +21,6 @@ import com.auction.kafka.repository.ImageRepository;
 import com.auction.kafka.util.ImageUtility;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.*;
 
 // @Service
 @RestController
@@ -28,23 +29,12 @@ import java.util.*;
 // @CrossOrigin(origins = "http://localhost:8082") open for specific port
 @CrossOrigin() // open for all ports
 public class ImageController {
-        @Autowired(required = false)
+        @Autowired // (required = false)
         ImageRepository imageRepository;
-        AuctionController auctionController;
-
-        // @Autowired
-        // public ImageController(ImageRepository imageRepository) {
-        // Assert.notNull(repository, "Repository must not be null!");
-        // this.imageRepository = imageRepository;
-        // }
 
         @PostMapping("/upload-images")
-        public ResponseEntity<Response> uploadImage(@RequestParam("images") List<MultipartFile> files/*
-                                                                                                                 * ,@
-                                                                                                                 * RequestParam(
-                                                                                                                 * "auction")
-                                                                                                                 * auctionID
-                                                                                                                 */)
+        public ResponseEntity<Response> uploadImage(@RequestParam("images") List<MultipartFile> files,
+                        @RequestParam("auctionID") int auctionID)
                         throws IOException {
 
                 try {
@@ -53,7 +43,7 @@ public class ImageController {
                                                 .name(file.getOriginalFilename())
                                                 .type(file.getContentType())
                                                 .image(ImageUtility.compressImage(file.getBytes()))
-                                                // .auction(auction)
+                                                .auctionID(auctionID)
                                                 .build();
 
                                 imageRepository.save(newImg);
@@ -65,6 +55,35 @@ public class ImageController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(new Response("Error uploading images: " + e.getMessage()));
                 }
+        }
+
+        @GetMapping(path = "/get-images/{auctionID}")
+        public ResponseEntity<List<byte[]>> getImagesByAuctionID(@PathVariable("auctionID") int auctionID)
+                        throws IOException {
+                List<byte[]> compressedImages = imageRepository.findImageBytesByAuctionID(auctionID);
+
+                if (compressedImages.isEmpty()) {
+                        return ResponseEntity.notFound().build();
+                }
+                log.info("Images retrived");
+
+                List<byte[]> decompressedImages = compressedImages.stream()
+                                .map(compressedImage -> {
+                                        try {
+                                                return ImageUtility.decompressImage(compressedImage);
+                                        } catch (Exception e) {
+                                                // Handle the exception
+                                                e.printStackTrace();
+                                                return null;
+                                        }
+                                })
+                                .toList(); // Requires Java 16 or above, for Java 8 use .collect(Collectors.toList())
+
+                log.info("Image fetched");
+                // return null;
+                return ResponseEntity
+                                .ok()
+                                .body(decompressedImages);
         }
 
 }
