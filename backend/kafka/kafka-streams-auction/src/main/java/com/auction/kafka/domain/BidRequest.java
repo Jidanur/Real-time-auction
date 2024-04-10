@@ -27,14 +27,6 @@ public class BidRequest {
     private Timestamp timeOfBid;
 
     public BidRequest(){
-
-    }
-
-    public BidRequest(int bidderID, int auctionID,int bidPrice,Timestamp timeOfBid){
-        this.bidderID = bidderID;
-        this.auctionID = auctionID;
-        this.bidPrice = bidPrice;
-        this.timeOfBid = timeOfBid;
     }
 
     public Boolean isEqual(BidRequest bidRequest){

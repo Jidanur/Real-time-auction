@@ -39,7 +39,7 @@ public class BidController {
         Runtime.getRuntime().addShutdownHook(new Thread(() ->{
             executor.shutdown();
             try{
-                executor.awaitTermination(1, TimeUnit.SECONDS);
+                executor.awaitTermination(5, TimeUnit.SECONDS);
             }
             catch (Exception ex){
                 log.error("exception happened in post construct executor -- Bid Controller", ex);
@@ -58,21 +58,21 @@ public class BidController {
 
         executor.execute(() ->{
             try{
-                BidRequest lastRequest = bidService.getLastBid(auctionID);;
-                SseEventBuilder firstEvent = SseEmitter.event().data(lastRequest).id(String.valueOf(0));
-                emitter.send(firstEvent);
-                Thread.sleep(1000);
-                
-                for(int i=0;true;i++){
-                    BidRequest currRequest = bidService.getLastBid(auctionID);
-                    
-                    /// only send if there's an update for bid
-                    if(!currRequest.isEqual(lastRequest)){
-                        SseEventBuilder event = SseEmitter.event().data(currRequest).id(String.valueOf(i));
+                BidRequest currRequest = bidService.getLastBid(auctionID);
+                BidRequest lastRequest = new BidRequest();
+
+                for(int i=0;currRequest != null;i++){
+                    SseEventBuilder event = SseEmitter.event().data(currRequest).id(String.valueOf(i));
+                    if(i == 0){
                         emitter.send(event);
                     }
+                    else if(currRequest.isEqual(lastRequest) == false){ //bid updated
+                        emitter.send(event);
+                    }
+                    /// get the updated value for bid
                     lastRequest = currRequest;
-                    Thread.sleep(100);
+                    currRequest =  bidService.getLastBid(auctionID);
+                    Thread.sleep(500);
                 }
             }
             catch(Exception ex){

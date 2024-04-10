@@ -38,11 +38,17 @@ public class BidService {
     public BidRequest getLastBid(int auctionID){
         BidRequest lastBidRequest = new BidRequest();
         Auction curr = auctionService.getAuctionById(auctionID);
-        if(curr != null){
+        lastBidRequest.setAuctionID(auctionID);
+        if(curr == null){
+            return null;
+        }
+        else{
             String lastBid = curr.getLastBid();
             if(!lastBid.isEmpty()){
                 String[] seperate = lastBid.split(",");
-                lastBidRequest = new BidRequest(Integer.parseInt(seperate[0]),auctionID,Integer.parseInt(seperate[1]),new Timestamp(Long.parseLong(seperate[2])));
+                lastBidRequest.setBidderID(Integer.parseInt(seperate[0]));
+                lastBidRequest.setBidPrice(Integer.parseInt(seperate[1]));
+                lastBidRequest.setTimeOfBid(new Timestamp(Long.parseLong(seperate[2])));
             }
         }
         return lastBidRequest;
