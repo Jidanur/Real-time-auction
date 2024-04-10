@@ -22,7 +22,7 @@ function Signup() {
     email: '',
   })
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [maxReached, setMaxReached] = useState({
     username: false,
@@ -85,8 +85,8 @@ function Signup() {
 
     try {
       const response = await fetch('http://127.0.0.1:8080/user/createuser', {
-        method:'POST',
-       // mode: 'no-cors', 
+        method: 'POST',
+        // mode: 'no-cors', 
         headers: {
           'Content-Type': 'application/json',
           //'Access-Control-Allow-Origin': '*',
@@ -98,16 +98,28 @@ function Signup() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      else
-      {
+      if (response.status) {
 
-      //const data = await response.json();
-      //console.log('Success:', data);
-      alert("Signup suceed. Please login.Thanks");
-      navigate('/login');
+        //const data = await response.json();
+        //console.log('Success:', data);
+        alert("Signup suceed. Please login.Thanks");
+        navigate('/login');
+      }
+      else {
+
+        if (response.status === 302) {
+          alert("Email is already registered, you can login or choose a different email.");
+
+        }
+        else if (response.status === 500) {
+          alert("Internal server error.");
+
+        }
+        else {
+          alert("Ooop.. Something went wrong. Please try again.");
+
+        }
+        throw new Error(`HTTP error! status: ${response.status}: ${response}`);
       }
 
 
@@ -184,17 +196,17 @@ function Signup() {
           </div>
 
 
-          <div style={{ textAlign: 'center', marginTop: '10px', fontSize:'14px' }}>
-          Already have an account? <Link to="/login">Login here</Link>
-        </div>
+          <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '14px' }}>
+            Already have an account? <Link to="/login">Login here</Link>
+          </div>
         </Form>
       </Container>
-  
+
 
 
     </div>
 
-    
+
   );
 }
 
