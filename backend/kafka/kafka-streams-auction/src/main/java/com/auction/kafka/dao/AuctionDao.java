@@ -33,20 +33,15 @@ public class AuctionDao {
 
         log.info("creating new Auction record-- AuctionDao");
         int id = -1;
+        /// set default values and validate time
+        Boolean validTime = auction.validateTime();
+        auction.setDefaultValues();
+
+        if (!validTime) {
+            return 0;
+        }
+
         try {
-            /// setting current time as start and adding value to add time to end;
-            // Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            // auction.setStartTime(currentTime); /// sets current time as start time
-
-            // Calendar calendar = Calendar.getInstance();
-            // calendar.setTimeInMillis(currentTime.getTime());
-            // calendar.add(Calendar.HOUR_OF_DAY, 1);
-
-            // auction.setEndTime(new Timestamp(calendar.getTimeInMillis()));
-
-            auction.setCurrentBid(0);
-            auction.setNumOfBids(0);
-
             getSession().persist(auction);
             id = auction.getAuctionID();
             log.info("successfully created auction with auctionID--" + id);

@@ -2,6 +2,7 @@ package com.auction.kafka.domain;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -36,7 +37,7 @@ public class Auction {
     @Column(name = "sellerID", nullable = false)
     private int sellerID;
 
-    @Column(name = "winnerID"/* , columnDefinition = "DEFAULT -1" */)
+    @Column(name = "winnerID", columnDefinition = "DEFAULT 0")
     private int winnerID;
 
     @Column(name = "auction_title", length = 200)
@@ -71,6 +72,43 @@ public class Auction {
     public void addBid(String currentBid) {
         numOfBids++;
         recentBids.add(currentBid);
+    }
+
+    public void setDefaultValues() {
+        currentBid = 0;
+        numOfBids = 0;
+        winnerID = 0;
+
+        if (auctionDescription == null) {
+            auctionDescription = "";
+        }
+        if (finalPrice == null) {
+            finalPrice = Integer.MAX_VALUE;
+        }
+        if (imageName == null) {
+            imageName = "";
+        }
+    }
+
+    public Boolean validateTime() {
+        Boolean valid = false;
+
+        if (startTime == null) { // default value for start time
+            startTime = new Timestamp(System.currentTimeMillis());
+        }
+
+        if (endTime == null) { /// default value for endTime 10 mins after start
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(startTime.getTime());
+            calendar.add(Calendar.MINUTE, 10);
+            endTime = new Timestamp(calendar.getTimeInMillis());
+            valid = true;
+        } else if (startTime.compareTo(endTime) < 0) {
+            valid = true;
+        }
+
+        return valid;
+
     }
 
 }

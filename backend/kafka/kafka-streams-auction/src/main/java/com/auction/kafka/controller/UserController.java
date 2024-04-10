@@ -3,9 +3,7 @@ package com.auction.kafka.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,9 +40,9 @@ public class UserController {
             return new ResponseEntity<Response>(new Response("user email already exists"),HttpStatus.FOUND);
         }
         else{
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
-            return new ResponseEntity<Response>(headers, HttpStatus.CREATED);
+            // HttpHeaders headers = new HttpHeaders();
+            // headers.setLocation(ucBuilder.path("/user/getuser/{id}").buildAndExpand(userID).toUri());
+            return new ResponseEntity<Response>(new Response("user created with UserID-"+ userID), HttpStatus.CREATED);
         }
 
     }
