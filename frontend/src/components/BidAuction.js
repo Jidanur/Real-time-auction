@@ -45,9 +45,14 @@ function BidderViewAuction() {
     const [timeLeft, setTimeLeft] = useState('');
 
 
+    const [listening, setListening] = useState(false);
+    const [bids, setBids] = useState([]);
+    let eventSource = undefined;
+
+
 
     const [formBid, setFormBid] = useState({
-        bid_price: '',
+        bid_price: 0,
         auction_id: '',
         date_time: '',
     });
@@ -129,74 +134,72 @@ function BidderViewAuction() {
                     //     currentPrice: data.currentBid === 0 ? data.initialPrice : data.currentBid,
 
                     // });
-                    try{
+                    try {
                         const responseSellerInfo = await fetch(`http://127.0.0.1:8080/user/getuser/${data.sellerID}`,
-                        {
-                            method: 'GET',
-                        });
-                        if (responseSellerInfo.ok)
-                        {
-    
-                            const sellerInfo=await responseSellerInfo.json();
+                            {
+                                method: 'GET',
+                            });
+                        if (responseSellerInfo.ok) {
+
+                            const sellerInfo = await responseSellerInfo.json();
                             console.log("Reposne: ", sellerInfo);
-                         
+
                             console.log("Fetch username succeed.");
                             setAuctionData(
                                 {
                                     ...auctionData,
-                                    auctioner:sellerInfo.userName,
+                                    auctioner: sellerInfo.userName,
                                 }
                             )
                         }
                     }
-                        catch(error)
-                        {
-                            console.error('There was an error with the get username form submission:', error);
-                            alert("There is something wrong with the request. Please clear all cookies and try again. Thanks!");
-                        }
-
-    
-    
+                    catch (error) {
+                        console.error('There was an error with the get username form submission:', error);
+                        alert("There is something wrong with the request. Please clear all cookies and try again. Thanks!");
+                    }
 
 
-console.log("auctionID ", data.auctionID);
+
+
+
+                    console.log("auctionID ", data.auctionID);
                     const responseImages = await fetch(`http://127.0.0.1:8080/auction/get-images/${data.auctionID}`, {
                         method: 'GET',
                     });
-    
+
                     if (!responseImages.ok) {
                         throw new Error(`HTTP error! status: ${responseImages.status}`);
                     }
-                    else{
-                        
+                    else {
+
                         const dataImages = await responseImages.json();
-                        console.log("The images received are ", dataImages);
-     
+                       // console.log("The images received are ", dataImages);
 
 
 
-                    setAuctionData({
-                        id: data.auctionID,
-                        title: data.auctionTitle,
-                        acutioner: data.sellerID,
 
-                        description: data.auctionDescription,
+                        setAuctionData({
+                            id: data.auctionID,
+                            title: data.auctionTitle,
+                            acutioner: data.sellerID,
 
-                        startPrice: data.initialPrice,
-                        images:dataImages,
+                            description: data.auctionDescription,
 
-                        startDate: startDate,
-                        startTime: startTime,
+                            startPrice: data.initialPrice,
+                            images: dataImages,
 
-                        endDate: endDate,
-                        endTime: endTime,
+                            startDate: startDate,
+                            startTime: startTime,
 
-                        currentPrice: data.currentBid==null || data.currentBid === 0 ? data.initialPrice : data.currentBid,
+                            endDate: endDate,
+                            endTime: endTime,
 
-                    });
+                            currentPrice: data.currentBid == null || data.currentBid === 0 ? data.initialPrice : data.currentBid,
 
-                    console.log("what is saved in teh auctiondb image is ", auctionData.images);
-                }
+                        });
+
+                        //console.log("what is saved in teh auctiondb image is ", auctionData.images);
+                    }
 
                     console.log("Image loaded.", auctionData);
                 }
@@ -207,6 +210,50 @@ console.log("auctionID ", data.auctionID);
         };
 
         fetchAuctionData();
+
+        if (!listening) {
+            eventSource = new EventSource(`http://localhost:8080/bid/getbid/${auctionID}`);
+
+            eventSource.onopen = (event) => {
+                console.log("connection opened")
+            }
+
+            eventSource.onmessage = (event) => {
+                const result= JSON.parse(event.data);
+                console.log("event", event);
+                console.log("event data ", event.data);
+                console.log("result", result);
+                console.log("bid rpice ", result.bidPrice);
+                setAuctionData({
+                    ...auctionData,
+                    currentPrice:event.data.bidPrice,
+                })
+                console.log("Auction has new price ", auctionData.currentPrice);
+                setBids(old => [...old, event.data])
+            }
+
+            eventSource.onerror = (event) => {
+                console.log(event.target.readyState)
+                if (event.target.readyState === EventSource.CLOSED) {
+                    console.log('eventsource closed (' + event.target.readyState + ')')
+                }
+                eventSource.close();
+            }
+
+            setListening(true);
+        }
+
+        return () => {
+            if (eventSource!==undefined)
+            {
+            eventSource.close();
+            console.log("eventsource closed")
+            }
+            else{
+                console.log("event is undefined");
+
+            }
+        }
     }, [auctionID]);
 
 
@@ -236,6 +283,19 @@ console.log("auctionID ", data.auctionID);
 
     // }, [endDate, endTime]);
 
+
+    const handleBidChange = (event) => {
+        const { name, value } = event.target;
+        // console.log("Setting bidding");
+
+        setFormBid(
+            {
+                ...formBid,
+                [name]: value,
+            });
+        // console.log("formbid price ", formBid.bid_price);
+    }
+
     const handleSubmitBid = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -244,7 +304,7 @@ console.log("auctionID ", data.auctionID);
             event.stopPropagation();
         } else {
             // window.location.href = '/';
-            postSubmitBid(formBid.bid_price);
+        postSubmitBid(formBid.bid_price);
             // setValidated(true);
 
         }
@@ -255,7 +315,7 @@ console.log("auctionID ", data.auctionID);
 
     const postSubmitBid = async (bid) => {
         console.log("Submit a bid");
-        console.log("button was cliked.");
+       // console.log("button was cliked.");
         const isAuthenticated = !!Cookies.get(COOKIE_USER_ID_KEY);
         if (!isAuthenticated) {
             // If user is not authenticated, show an alert and then redirect to login page
@@ -277,8 +337,8 @@ console.log("auctionID ", data.auctionID);
                         auctionID: auctionData.id,
                         bidderID: bidder_id,
 
-                        bidPrice: bid,
-                        timeOfBid: formBid.date_time
+                        bidPrice: parseInt(formBid.bid_price, 10),
+                        // timeOfBid: formBid.date_time
                     }),
                 });
 
@@ -291,7 +351,32 @@ console.log("auctionID ", data.auctionID);
                     //const data = await response.json();
                     //console.log('Success:', data);
                     alert("Bid submitted, thanks");
+                    try
+                    {
+                    const responseNewBid = await fetch(`http://localhost:8080/bid/getbid/${auctionData.id}`,
+                    {
+                        method:"GET",
+                    });
 
+                    if (responseNewBid.ok)
+                    {
+
+                        console.log("New bid with higer price");
+                        console.log(response);
+
+                        const dataUpdatedBid=await responseNewBid.body.json();
+                        setAuctionData({
+                            ...auctionData,
+                            currentPrice:dataUpdatedBid.bidPrice,
+                        });
+                    }
+                }
+                catch(error)
+                {
+                    console.log("Something went wrong when fetch updated price", error);
+                    alert(error);
+                    
+                }
 
                 }
 
@@ -381,7 +466,7 @@ console.log("auctionID ", data.auctionID);
                                             ))}
 
                                         </Form.Group>
-                                     )} 
+                                    )}
                                 </div>
 
 
@@ -405,10 +490,13 @@ console.log("auctionID ", data.auctionID);
                                     <InputGroup.Text>$</InputGroup.Text>
                                     <Form.Control
                                         required
+                                        name="bid_price"
                                         type="number"
                                         placeholder='Your bid'
                                         step="1"
+                                        value={formBid.bid_price}
                                         style={{ backgroundColor: Theme.palette.primary.light_orange }}
+                                        onChange={handleBidChange}
 
                                         aria-label="Amount (to the nearest dollar)" />
                                     <InputGroup.Text>.00</InputGroup.Text>
@@ -421,15 +509,17 @@ console.log("auctionID ", data.auctionID);
                                             color: 'black', display: 'flex',
                                             backgroundColor: Theme.palette.secondary.light_green
                                         }}
-                                        value={formBid.bid_price}
+
+                                    //  onChange={}
                                     //onClick={() => handleSubmitBid()}
+
                                     >
                                         <b>Confirm</b>
                                     </Button>
                                 </div>
 
 
-{/* //Timeleft  */}
+                                {/* //Timeleft  */}
                                 {/* <Form.Group className="mb-3" controlId="time_left">
                                     <Form.Label style={{ textAlign: 'center' }}>Time Left </Form.Label>
                                     <Form.Control //
@@ -495,15 +585,15 @@ console.log("auctionID ", data.auctionID);
                         <br>
 
                         </br>
-                        <h5>Top {list.length} recent bids:</h5>
+                        <h5>Top {bids.length} recent bids:</h5>
                         <ListGroup>
                             <Container style={{ backgroundColor: Theme.palette.primary.light_orange }}>
-                                {list.map((item, index) => (
+                                {bids.map((item, index) => (
                                     <ListGroup.Item key={index}>
                                         <Row>
-                                            <Col>{item.date}</Col>
-                                            <Col>{item.name}</Col>
-                                            <Col>${item.amount}</Col>
+                                            <Col>{item.timeOfBid}</Col>
+                                            {/* <Col>{item.}</Col> */}
+                                            <Col>${item.bidPrice}</Col>
                                         </Row>
                                     </ListGroup.Item>
                                 ))}

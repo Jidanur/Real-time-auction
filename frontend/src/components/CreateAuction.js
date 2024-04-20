@@ -318,6 +318,7 @@ export const CreateAuction = () => {
       let auction_id = -1;
       console.log("the use id get from cookie " + auctioner_id);
       try {
+        console.log("the use id get from cookie " + auctioner_id);
         const responseAuction = await fetch('http://127.0.0.1:8080/auction/createauction', {
           method: 'POST',
           headers: {
@@ -325,7 +326,7 @@ export const CreateAuction = () => {
           },
           body: JSON.stringify({
             sellerID: auctioner_id,
-            winnerID:auctioner_id,
+            //winnerID:auctioner_id,
             auctionTitle: formAuction.title,
             auctionDescription: formAuction.description,
             // imageName:
