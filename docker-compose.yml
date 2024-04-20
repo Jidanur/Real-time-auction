@@ -40,7 +40,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
   
   spring-auction-backend:
     image: spring-auction-backend:latest
